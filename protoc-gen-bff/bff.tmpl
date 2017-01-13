@@ -1,0 +1,117 @@
+package {{.TargetPackage}}
+
+import (
+	"net/http"
+	"io/ioutil"
+	"encoding/json"
+	"fmt"
+
+	"{{.GoPackage}}"
+	"bitbucket.org/doozer-de/rest"
+	"golang.org/x/net/context"
+	{{range .Imports}}
+		"{{.}}"
+	{{- end}}
+)
+
+var (
+	baseURI = "{{.BaseURI}}"
+	_ = ioutil.Discard
+)
+
+type QSParameter struct {
+	Key   string // Which key
+	Field string // goes to which field in a go struct
+	Type  string // should have what type
+}
+
+
+func (s *GeneratedService) GetHandlersToRegister() []rest.Register {
+	return []rest.Register{ {{range .GetMappedMethods}}
+		{ Method: "{{.RESTMethod}}", Path: "{{.HarmonizedRESTPath}}", Handler: s.{{.Name}} },
+	{{- end}}
+	}
+}
+
+func (s *GeneratedService) GetBaseURI() string {
+	return baseURI
+}
+
+func (s *GeneratedService) SetErrorHandler(h rest.ErrorHandler) error {
+	if h == nil {
+		return fmt.Errorf("ErrorHandler cannot be nil")
+	}
+	s.errorHandler = h
+	return nil
+}
+
+type GeneratedService struct {
+	GrpcService {{.ServiceType}}
+	errorHandler rest.ErrorHandler
+}
+
+func NewGeneratedService(s {{.ServiceType}}, errorHandler rest.ErrorHandler) (*GeneratedService, error) {
+	if s == nil {
+		return nil, fmt.Errorf("The given GRPC Service cannot be null")
+	}
+
+	return &GeneratedService{
+		GrpcService: s,
+		errorHandler: errorHandler,
+	}, nil
+}
+
+{{range .GetMappedMethods}}
+func (s *GeneratedService) {{.Name}}(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	req := {{.InputTypeName}}{}
+	{{if eq "*" .RESTBody -}}
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			s.errorHandler(ctx, w, r, err)
+			return
+		}
+		defer r.Body.Close()
+
+		err = json.Unmarshal(body, &req)
+		if err != nil {
+			s.errorHandler(ctx, w, r, err)
+			return
+		}
+	{{- end}}
+
+	{{with .RESTQueryString}}
+		values := r.URL.Query()
+		{{range .}}
+		if v, ok := values["{{.Key}}"]; ok {
+			if x, ok := rest.{{GetConverterName .Metadata}}(v[0]); ok {
+				{{.Metadata.Generate}}
+				req{{.Metadata.GetPath}} = x
+			}
+		}
+		{{end}}
+	{{end}}
+
+	{{with .RESTPathVars}}
+		params := rest.GetParams(ctx)
+		{{range .}}
+			if x, ok := rest.{{GetConverterName .Metadata}}(params[{{.N}}].Value); ok {
+				{{.Metadata.Generate}}	
+				req{{- .Metadata.GetPath}} = x
+			}
+		{{end}}
+	{{end}}
+	resp, err := s.GrpcService.{{.Name}}(ctx, &req)
+	if err != nil {
+		s.errorHandler(ctx, w, r, err)
+		return
+	}
+	b, err := json.Marshal(resp)
+	if err != nil {
+		s.errorHandler(ctx, w, r, err)
+		return
+	}
+	w.Header().Set("Content-type", "application/json")
+	rest.SetStatus(w, resp)
+	w.Write(b)
+}
+{{end}}

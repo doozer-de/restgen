@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+package pbmap;
+
+// Correct in generated file:
+// Problem descriptor.proto an descriptor.pbmap.go are in totally differnt locations
+//import google_protobuf "github.com/golang/protobuf/protoc-gen-go/descriptor"
+
+// MethodMap gives the parameters how to Map a GRPC Service Method to an REST Endpoint
+message MethodMap {
+    // "GET", "PUT", "POST", "DELETE"
+	string method = 1;
+	// Format "a/b/c/:d/:e" - a/b/c are fixed in the path, :d and :e are paramaters mapped to fields D, E in the underlying GRPC Request
+    // Has to be compatible with Julian Schmidt's HTTP Router
+	string path = 2;
+    // Format "key1=:var1&key=:var2" They keys will be mapped to the variables var1, var2 of the unterlying GRPC Request
+	string query_string = 3;
+	string body = 4;
+}
+
+extend google.protobuf.MethodOptions {
+	MethodMap method_map = 87654321;
+}
+
+// If an Submessage of an Request-Message in Protobuf has a field (directly at the moment, deeper nesting is not supported at the moment), then additional parameters defined in query (similar to the querystring syntax of your rest-framework) will be added to the queryString documentation and mapped automatically to the objects
+message QueryMap {
+	string query =1;
+}
+
+// Page provides information from the query string which you can use to get a larger collection of objects pagewise
+message Page {
+	option (query_map) = {
+		query: "pageOffset=<Offset>&pageLimit=<Limit>"
+	};
+	uint64 Limit = 1;
+	uint64 Offset = 2;
+}
+
+message Filter {
+	option (query_map) = {
+		query: "q=<Query>"
+	};
+
+	string Query = 1;
+}
+
+// Sort provides information from the query string on how to sort a given collection of objects
+message Sort {
+	option (query_map) = {
+		query: "sort=<Field>&desc=<Desc>"
+	};
+	string Field = 1;
+	bool Desc = 2;
+}
+
+extend google.protobuf.MessageOptions {
+	QueryMap query_map = 9813242;
+}
+
+// ServiceMap provides information for how to map an GRPC Service to an REST Service
+message ServiceMap {
+	string version = 1;
+	string base_uri = 2;
+	string target_package = 3;
+}
+
+extend google.protobuf.ServiceOptions {
+	ServiceMap service_map = 87654323;
+}

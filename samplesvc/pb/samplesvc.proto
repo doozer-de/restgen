@@ -1,0 +1,263 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "bitbucket.org/doozer-de/restgen/samplesvc/pb";
+
+import "bitbucket.org/doozer-de/restgen/pbmap/map.proto";
+
+service BigTestService {
+	option (pbmap.service_map) = {
+		version: "1"
+		base_uri: "/base_uri/"
+		target_package: "samplesvc"
+	};
+
+	// CreateHaveAll tests the put http method with body.
+	rpc CreateHaveAll(CreateHaveAllRequest) returns (CreateHaveAllResponse) {
+		option (pbmap.method_map) = {
+			method: "PUT"
+			body: "*"
+			path: "/haveall/"
+		};
+	}
+
+	// GetHaveAll should retrieve the HaveAll message with the id given in the path
+    	// Excluded from HaveAll are the "repeated"-fields (slices). This is not supported at the moment.
+	rpc GetHaveAll(GetHaveAllRequest) returns (GetHaveAllResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/haveall/"
+            query_string: "key1=HaveAll.Id&key2=HaveAll.DoubleField&key3=HaveAll.Float&key4=HaveAll.Int32&key5=HaveAll.Int64&key6=HaveAll.UInt32&key7=HaveAll.UInt64&key8=HaveAll.SInt64&key9=HaveAll.SInt32&key10=HaveAll.SFixed&key11=HaveAll.Fixed64&key12=HaveAll.SFixed32&key13=HaveAll.SFixed64&key14=HaveAll.BoolField&key15=HaveAll.StringField&key16=HaveAll.BytesField"
+		};
+	}
+
+	// DeepPath tests a query string given a value deeply nested in in structs.
+	rpc DeepPath(DeepHaveAllRequest) returns (DeepHaveAllResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/deeppath/"
+			query_string: "key=HaveAll.Embedded.Embedded.Embedded.Embedded.Embedded.Embedded.Embedded.Id:int"
+		};
+	}
+
+	// DoNotCreate is a testcase for a method without an method_map option. Therefore no REST frontend should be generated
+	rpc DoNotCreate(DoNotCreateRequest) returns (DoNotCreateResponse) {
+	}
+
+	// GetSmall tests path parameter.
+	rpc GetSmall(GetSmallRequest) returns (GetSmallResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/small/:id"
+		};
+	}
+
+	// GetSmall1 tests path parameter in the middle of a path.
+	rpc GetSmall1(GetSmallRequest) returns (GetSmallResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/small/:idtest/name"
+		};
+	}
+
+	// PutSmall tests the put http method.
+	rpc PutSmall(PutSmallRequest) returns (PutSmallResponse) {
+		option (pbmap.method_map) = {
+			method: "PUT"
+			path: "/small/"
+			body: "*"
+		};
+	}
+
+    	// Flaw: id of the updated resource should be in the URI. An id from the URI should be mapped into posted objects.
+    	rpc PostSmall(PostSmallRequest) returns (PostSmallResponse) {
+        	option (pbmap.method_map) = {
+            		method: "POST"
+            		path: "/small/"
+            		body: "*"
+        	};
+    	}
+
+	// DeleteSmall tests the delete http method.
+    	rpc DeleteSmall(DeleteSmallRequest) returns (DeleteSmallResponse) {
+        	option (pbmap.method_map) = {
+            		method: "DELETE"
+            		path: "/small/:id"
+        	};
+    	}
+
+	// GetLongPath is the testcase to assign more than one path parameter to the correct corresponding field.
+    	rpc GetLongPath(GetLongPathRequest) returns (GetLongPathResponse) {
+        	option (pbmap.method_map) = {
+            		method: "GET"
+            		path: "/getmid/a/:ida/b/:idb/c/:idc/d/:idd/e/:ide"
+        	};
+    	}
+
+	// GetPathPath tests if a path parameter can also be nested deeply into structs.
+	rpc GetPathPath(DeepPathPathRequest) returns (DeepPathPathResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/deeppathpath/:HaveAll.Embedded.Embedded.Id"
+		};
+	}
+
+	// EmptyRequestMessage takes an empty request message and returns an empty request message.
+	rpc EmptyRequestMessage(EmptyRequestMessageRequest) returns (EmptyRequestMessageResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/emptyrequest/"
+		};
+	}
+
+	// PageSortFilter depends on other messages defined in other protobuf definitions
+	// (here: Page-, Sort- and Filtermessage in pbmap/map.proto).
+	rpc PageSortFilter(PageSortFilterRequest) returns (PageSortFilterResponse) {
+		option (pbmap.method_map) = {
+			method: "GET"
+			path: "/pagesortfilter/"
+		};
+	}
+}
+
+message DeepPathPathRequest {
+	HaveAll HaveAll = 1;
+}
+
+message DeepPathPathResponse {
+	uint32 Id = 1;
+}
+
+message DeepHaveAllRequest {
+	HaveAll HaveAll = 1;
+}
+
+message DeepHaveAllResponse {
+	uint32 Id = 1;
+}
+
+message HaveAll {
+	uint32 Id = 19;
+	double DoubleField = 1;
+	float Float = 2;
+	int32 Int32 = 3;
+	int64 Int64 = 4;
+	uint32 UInt32 = 5;
+	uint64 UInt64 = 6;
+	sint64 SInt64 = 7;
+	sint32 SInt32 = 8;
+	fixed32 SFixed = 9;
+	fixed64 Fixed64 = 10;
+	sfixed32 SFixed32 = 11;
+	sfixed64 SFixed64 = 12;
+	bool BoolField = 13;
+	string StringField = 14;
+	bytes BytesField = 15;
+	Embedded Embedded = 16;
+	repeated string RepeatedString = 17;
+	repeated bytes RepeatedBytes = 20;
+	repeated Embedded RepeatedEmbedded = 18;
+	map<string, string> MapStringStringField = 21;
+	map<string, Embedded> MapStringEmbeddedField = 22;
+}
+
+message Embedded {
+	uint32 Id = 1;
+	string Text = 2;
+	Embedded Embedded = 3;
+}
+
+message Embedded2 {
+	uint32 Id = 1;
+}
+
+message Small {
+	uint32 Id = 1;
+	string Text = 2;
+}
+
+
+message GetHaveAllRequest {
+    	HaveAll HaveAll = 1;
+}
+
+message GetHaveAllResponse {
+	HaveAll HaveAll = 1;
+}
+
+message CreateHaveAllRequest {
+	HaveAll HaveAll = 1;
+}
+
+message CreateHaveAllResponse {
+	HaveAll HaveAll = 1;
+}
+
+message DoNotCreateRequest {
+}
+
+message DoNotCreateResponse {
+}
+
+message GetSmallRequest {
+	uint32 Id = 1;
+	uint32 Idtest = 2;
+}
+
+message GetSmallResponse {
+	Small Small = 1;
+}
+
+message PutSmallRequest {
+    	Small Small = 1;
+}
+
+message PutSmallResponse {
+}
+
+message PostSmallRequest {
+    	Small Small = 1;
+}
+
+message PostSmallResponse {
+}
+
+message DeleteSmallRequest {
+    	uint32 Id = 1;
+}
+
+message DeleteSmallResponse {
+}
+
+message GetLongPathRequest {
+	uint32 Ida = 1;
+	string Idb = 2;
+	uint64 Idc = 3;
+	int32 Idd = 4;
+	string Ide = 5;
+}
+
+message GetLongPathResponse {
+	uint32 Idf = 1;
+}
+
+message EmptyRequestMessageRequest {
+}
+
+message EmptyRequestMessageResponse {
+}
+
+message PageSortFilterRequest {
+	pbmap.Page Page = 1;
+	pbmap.Sort Sort = 2;
+	pbmap.Filter Filter = 3;
+}
+
+message PageSortFilterResponse {
+	uint64 PageLimit = 1;
+	uint64 PageOffset = 2;
+	string SortField = 3;
+	bool SortDesc = 4;
+	string FilterQuery = 5;
+}
