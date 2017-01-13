@@ -14,7 +14,7 @@ This tool is written in go. You need a working go installation to install
 it. Execute the following command in a terminal:
 
 ```bash
-go install bitbucket.org/doozer-de/restgen/protoc-gen-bff
+go install github.com/doozer-de/restgen/protoc-gen-bff
 ```
 
 This installs the protobuf compiler plugin `protoc-gen-bff` (where "bff"

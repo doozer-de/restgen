@@ -9,7 +9,7 @@ import (
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
-const restmapimport = "bitbucket.org/doozer-de/restgen/pbmap"
+const restmapimport = "github.com/doozer-de/restgen/pbmap"
 
 // Messages is a map from the messages name ot the Message
 type Messages map[string]*Message

@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package pb;
 
-option go_package = "bitbucket.org/doozer-de/restgen/samplesvc/pb";
+option go_package = "github.com/doozer-de/restgen/samplesvc/pb";
 
-import "bitbucket.org/doozer-de/restgen/pbmap/map.proto";
+import "github.com/doozer-de/restgen/pbmap/map.proto";
 
 service BigTestService {
 	option (pbmap.service_map) = {

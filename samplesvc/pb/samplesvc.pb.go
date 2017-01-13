@@ -43,7 +43,7 @@ package pb
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import pbmap "bitbucket.org/doozer-de/restgen/pbmap"
+import pbmap "github.com/doozer-de/restgen/pbmap"
 
 import (
 	context "golang.org/x/net/context"

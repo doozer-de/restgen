@@ -2,7 +2,7 @@
 package emitters
 
 import (
-	"bitbucket.org/doozer-de/restgen/registry"
+	"github.com/doozer-de/restgen/registry"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 

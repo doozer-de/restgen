@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"bitbucket.org/doozer-de/rest"
-	"bitbucket.org/doozer-de/restgen/samplesvc"
-	"bitbucket.org/doozer-de/restgen/samplesvc/pb"
+	"github.com/doozer-de/rest"
+	"github.com/doozer-de/restgen/samplesvc"
+	"github.com/doozer-de/restgen/samplesvc/pb"
 
 	"encoding/base64"
 	"encoding/json"

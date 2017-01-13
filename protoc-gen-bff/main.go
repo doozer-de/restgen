@@ -14,8 +14,8 @@ import (
 	"os"
 	"text/template"
 
-	"bitbucket.org/doozer-de/restgen/protoc-gen-bff/emitters"
-	"bitbucket.org/doozer-de/restgen/registry"
+	"github.com/doozer-de/restgen/protoc-gen-bff/emitters"
+	"github.com/doozer-de/restgen/registry"
 	"github.com/golang/protobuf/proto"
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )

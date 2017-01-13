@@ -3,7 +3,7 @@ package samplesvc
 import (
 	"fmt"
 
-	"bitbucket.org/doozer-de/restgen/samplesvc/pb"
+	"github.com/doozer-de/restgen/samplesvc/pb"
 
 	"golang.org/x/net/context"
 )

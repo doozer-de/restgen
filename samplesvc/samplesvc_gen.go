@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"bitbucket.org/doozer-de/rest"
-	"bitbucket.org/doozer-de/restgen/samplesvc/pb"
+	"github.com/doozer-de/rest"
+	"github.com/doozer-de/restgen/samplesvc/pb"
 	"golang.org/x/net/context"
 
-	"bitbucket.org/doozer-de/restgen/pbmap"
+	"github.com/doozer-de/restgen/pbmap"
 )
 
 var (
