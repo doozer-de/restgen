@@ -46,7 +46,7 @@ func (s *GeneratedService) SetErrorHandler(h rest.ErrorHandler) error {
 }
 
 type GeneratedService struct {
-	GrpcService {{.ServiceType}}
+	Service {{.ServiceType}}
 	errorHandler rest.ErrorHandler
 }
 
@@ -56,7 +56,7 @@ func NewGeneratedService(s {{.ServiceType}}, errorHandler rest.ErrorHandler) (*G
 	}
 
 	return &GeneratedService{
-		GrpcService: s,
+		Service: s,
 		errorHandler: errorHandler,
 	}, nil
 }
@@ -100,7 +100,7 @@ func (s *GeneratedService) {{.Name}}(ctx context.Context, w http.ResponseWriter,
 			}
 		{{end}}
 	{{end}}
-	resp, err := s.GrpcService.{{.Name}}(ctx, &req)
+	resp, err := s.Service.{{.Name}}(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return

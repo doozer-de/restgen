@@ -54,7 +54,7 @@ func (s *GeneratedService) SetErrorHandler(h rest.ErrorHandler) error {
 }
 
 type GeneratedService struct {
-	GrpcService  pb.BigTestServiceServer
+	Service      pb.BigTestServiceServer
 	errorHandler rest.ErrorHandler
 }
 
@@ -64,7 +64,7 @@ func NewGeneratedService(s pb.BigTestServiceServer, errorHandler rest.ErrorHandl
 	}
 
 	return &GeneratedService{
-		GrpcService:  s,
+		Service:      s,
 		errorHandler: errorHandler,
 	}, nil
 }
@@ -84,7 +84,7 @@ func (s *GeneratedService) CreateHaveAll(ctx context.Context, w http.ResponseWri
 		return
 	}
 
-	resp, err := s.GrpcService.CreateHaveAll(ctx, &req)
+	resp, err := s.Service.CreateHaveAll(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -104,12 +104,75 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 
 	values := r.URL.Query()
 
-	if v, ok := values["key2"]; ok {
-		if x, ok := rest.ToFloat64(v[0]); ok {
+	if v, ok := values["key9"]; ok {
+		if x, ok := rest.ToInt32(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
-			req.HaveAll.DoubleField = x
+			req.HaveAll.SInt32 = x
+		}
+	}
+
+	if v, ok := values["key10"]; ok {
+		if x, ok := rest.ToUint32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SFixed = x
+		}
+	}
+
+	if v, ok := values["key8"]; ok {
+		if x, ok := rest.ToInt64(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SInt64 = x
+		}
+	}
+
+	if v, ok := values["key4"]; ok {
+		if x, ok := rest.ToInt32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Int32 = x
+		}
+	}
+
+	if v, ok := values["key13"]; ok {
+		if x, ok := rest.ToInt64(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SFixed64 = x
+		}
+	}
+
+	if v, ok := values["key14"]; ok {
+		if x, ok := rest.ToBool(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.BoolField = x
+		}
+	}
+
+	if v, ok := values["key16"]; ok {
+		if x, ok := rest.ToBytes(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.BytesField = x
+		}
+	}
+
+	if v, ok := values["key1"]; ok {
+		if x, ok := rest.ToUint32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Id = x
 		}
 	}
 
@@ -131,102 +194,12 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 		}
 	}
 
-	if v, ok := values["key8"]; ok {
-		if x, ok := rest.ToInt64(v[0]); ok {
+	if v, ok := values["key2"]; ok {
+		if x, ok := rest.ToFloat64(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
-			req.HaveAll.SInt64 = x
-		}
-	}
-
-	if v, ok := values["key10"]; ok {
-		if x, ok := rest.ToUint32(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SFixed = x
-		}
-	}
-
-	if v, ok := values["key12"]; ok {
-		if x, ok := rest.ToInt32(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SFixed32 = x
-		}
-	}
-
-	if v, ok := values["key1"]; ok {
-		if x, ok := rest.ToUint32(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Id = x
-		}
-	}
-
-	if v, ok := values["key9"]; ok {
-		if x, ok := rest.ToInt32(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SInt32 = x
-		}
-	}
-
-	if v, ok := values["key13"]; ok {
-		if x, ok := rest.ToInt64(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SFixed64 = x
-		}
-	}
-
-	if v, ok := values["key15"]; ok {
-		if x, ok := rest.ToString(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.StringField = x
-		}
-	}
-
-	if v, ok := values["key11"]; ok {
-		if x, ok := rest.ToUint64(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Fixed64 = x
-		}
-	}
-
-	if v, ok := values["key16"]; ok {
-		if x, ok := rest.ToBytes(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.BytesField = x
-		}
-	}
-
-	if v, ok := values["key3"]; ok {
-		if x, ok := rest.ToFloat32(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Float = x
-		}
-	}
-
-	if v, ok := values["key4"]; ok {
-		if x, ok := rest.ToInt32(v[0]); ok {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Int32 = x
+			req.HaveAll.DoubleField = x
 		}
 	}
 
@@ -239,16 +212,43 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 		}
 	}
 
-	if v, ok := values["key14"]; ok {
-		if x, ok := rest.ToBool(v[0]); ok {
+	if v, ok := values["key11"]; ok {
+		if x, ok := rest.ToUint64(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
-			req.HaveAll.BoolField = x
+			req.HaveAll.Fixed64 = x
 		}
 	}
 
-	resp, err := s.GrpcService.GetHaveAll(ctx, &req)
+	if v, ok := values["key12"]; ok {
+		if x, ok := rest.ToInt32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SFixed32 = x
+		}
+	}
+
+	if v, ok := values["key15"]; ok {
+		if x, ok := rest.ToString(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.StringField = x
+		}
+	}
+
+	if v, ok := values["key3"]; ok {
+		if x, ok := rest.ToFloat32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Float = x
+		}
+	}
+
+	resp, err := s.Service.GetHaveAll(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -298,7 +298,7 @@ func (s *GeneratedService) DeepPath(ctx context.Context, w http.ResponseWriter, 
 		}
 	}
 
-	resp, err := s.GrpcService.DeepPath(ctx, &req)
+	resp, err := s.Service.DeepPath(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -323,7 +323,7 @@ func (s *GeneratedService) GetSmall(ctx context.Context, w http.ResponseWriter, 
 		req.Id = x
 	}
 
-	resp, err := s.GrpcService.GetSmall(ctx, &req)
+	resp, err := s.Service.GetSmall(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -348,7 +348,7 @@ func (s *GeneratedService) GetSmall1(ctx context.Context, w http.ResponseWriter,
 		req.Idtest = x
 	}
 
-	resp, err := s.GrpcService.GetSmall1(ctx, &req)
+	resp, err := s.Service.GetSmall1(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -378,7 +378,7 @@ func (s *GeneratedService) PutSmall(ctx context.Context, w http.ResponseWriter, 
 		return
 	}
 
-	resp, err := s.GrpcService.PutSmall(ctx, &req)
+	resp, err := s.Service.PutSmall(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -408,7 +408,7 @@ func (s *GeneratedService) PostSmall(ctx context.Context, w http.ResponseWriter,
 		return
 	}
 
-	resp, err := s.GrpcService.PostSmall(ctx, &req)
+	resp, err := s.Service.PostSmall(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -433,7 +433,7 @@ func (s *GeneratedService) DeleteSmall(ctx context.Context, w http.ResponseWrite
 		req.Id = x
 	}
 
-	resp, err := s.GrpcService.DeleteSmall(ctx, &req)
+	resp, err := s.Service.DeleteSmall(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -478,7 +478,7 @@ func (s *GeneratedService) GetLongPath(ctx context.Context, w http.ResponseWrite
 		req.Ide = x
 	}
 
-	resp, err := s.GrpcService.GetLongPath(ctx, &req)
+	resp, err := s.Service.GetLongPath(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -511,7 +511,7 @@ func (s *GeneratedService) GetPathPath(ctx context.Context, w http.ResponseWrite
 		req.HaveAll.Embedded.Embedded.Id = x
 	}
 
-	resp, err := s.GrpcService.GetPathPath(ctx, &req)
+	resp, err := s.Service.GetPathPath(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -529,7 +529,7 @@ func (s *GeneratedService) GetPathPath(ctx context.Context, w http.ResponseWrite
 func (s *GeneratedService) EmptyRequestMessage(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	req := pb.EmptyRequestMessageRequest{}
 
-	resp, err := s.GrpcService.EmptyRequestMessage(ctx, &req)
+	resp, err := s.Service.EmptyRequestMessage(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
@@ -549,21 +549,21 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 
 	values := r.URL.Query()
 
-	if v, ok := values["pageOffset"]; ok {
-		if x, ok := rest.ToUint64(v[0]); ok {
-			if req.Page == nil {
-				req.Page = &pbmap.Page{}
-			}
-			req.Page.Offset = x
-		}
-	}
-
 	if v, ok := values["pageLimit"]; ok {
 		if x, ok := rest.ToUint64(v[0]); ok {
 			if req.Page == nil {
 				req.Page = &pbmap.Page{}
 			}
 			req.Page.Limit = x
+		}
+	}
+
+	if v, ok := values["pageOffset"]; ok {
+		if x, ok := rest.ToUint64(v[0]); ok {
+			if req.Page == nil {
+				req.Page = &pbmap.Page{}
+			}
+			req.Page.Offset = x
 		}
 	}
 
@@ -594,7 +594,7 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 		}
 	}
 
-	resp, err := s.GrpcService.PageSortFilter(ctx, &req)
+	resp, err := s.Service.PageSortFilter(ctx, &req)
 	if err != nil {
 		s.errorHandler(ctx, w, r, err)
 		return
