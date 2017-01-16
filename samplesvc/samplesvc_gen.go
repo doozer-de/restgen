@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"bitbucket.org/doozer-de/rest"
+	"github.com/doozer-de/rest"
 	"github.com/doozer-de/restgen/samplesvc/pb"
 	"golang.org/x/net/context"
 
-	"bitbucket.org/doozer-de/restgen/pbmap"
+	"github.com/doozer-de/restgen/pbmap"
 )
 
 var (
@@ -29,7 +29,6 @@ func (s *GeneratedService) GetHandlersToRegister() []rest.Register {
 		{Method: "PUT", Path: "/haveall/", Handler: s.CreateHaveAll},
 		{Method: "GET", Path: "/haveall/", Handler: s.GetHaveAll},
 		{Method: "GET", Path: "/deeppath/", Handler: s.DeepPath},
-		{Method: "", Path: "", Handler: s.DoNotCreate},
 		{Method: "GET", Path: "/small/:id", Handler: s.GetSmall},
 		{Method: "GET", Path: "/small/:id/name", Handler: s.GetSmall1},
 		{Method: "PUT", Path: "/small/", Handler: s.PutSmall},
@@ -55,8 +54,7 @@ func (s *GeneratedService) SetErrorHandler(h rest.ErrorHandler) error {
 }
 
 type GeneratedService struct {
-	GrpcService pb.BigTestServiceServer
-
+	GrpcService  pb.BigTestServiceServer
 	errorHandler rest.ErrorHandler
 }
 
@@ -106,29 +104,8 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 
 	values := r.URL.Query()
 
-	if v, ok := values["key14"]; ok {
-		x, err := rest.ConvertBool(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.BoolField = x
-		}
-	}
-
-	if v, ok := values["key1"]; ok {
-		x, err := rest.ConvertUint32(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Id = x
-		}
-	}
-
 	if v, ok := values["key2"]; ok {
-		x, err := rest.ConvertFloat64(v[0])
-		if err == nil {
+		if x, ok := rest.ToFloat64(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
@@ -136,109 +113,8 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 		}
 	}
 
-	if v, ok := values["key4"]; ok {
-		x, err := rest.ConvertInt32(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Int32 = x
-		}
-	}
-
-	if v, ok := values["key8"]; ok {
-		x, err := rest.ConvertInt64(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SInt64 = x
-		}
-	}
-
-	if v, ok := values["key9"]; ok {
-		x, err := rest.ConvertInt32(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SInt32 = x
-		}
-	}
-
-	if v, ok := values["key11"]; ok {
-		x, err := rest.ConvertUint64(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Fixed64 = x
-		}
-	}
-
-	if v, ok := values["key12"]; ok {
-		x, err := rest.ConvertInt32(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SFixed32 = x
-		}
-	}
-
-	if v, ok := values["key15"]; ok {
-		x, err := rest.ConvertString(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.StringField = x
-		}
-	}
-
-	if v, ok := values["key3"]; ok {
-		x, err := rest.ConvertFloat32(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.Float = x
-		}
-	}
-
-	if v, ok := values["key6"]; ok {
-		x, err := rest.ConvertUint32(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.UInt32 = x
-		}
-	}
-
-	if v, ok := values["key7"]; ok {
-		x, err := rest.ConvertUint64(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.UInt64 = x
-		}
-	}
-
-	if v, ok := values["key13"]; ok {
-		x, err := rest.ConvertInt64(v[0])
-		if err == nil {
-			if req.HaveAll == nil {
-				req.HaveAll = &pb.HaveAll{}
-			}
-			req.HaveAll.SFixed64 = x
-		}
-	}
-
 	if v, ok := values["key5"]; ok {
-		x, err := rest.ConvertInt64(v[0])
-		if err == nil {
+		if x, ok := rest.ToInt64(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
@@ -246,9 +122,26 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 		}
 	}
 
+	if v, ok := values["key7"]; ok {
+		if x, ok := rest.ToUint64(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.UInt64 = x
+		}
+	}
+
+	if v, ok := values["key8"]; ok {
+		if x, ok := rest.ToInt64(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SInt64 = x
+		}
+	}
+
 	if v, ok := values["key10"]; ok {
-		x, err := rest.ConvertUint32(v[0])
-		if err == nil {
+		if x, ok := rest.ToUint32(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
@@ -256,13 +149,102 @@ func (s *GeneratedService) GetHaveAll(ctx context.Context, w http.ResponseWriter
 		}
 	}
 
+	if v, ok := values["key12"]; ok {
+		if x, ok := rest.ToInt32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SFixed32 = x
+		}
+	}
+
+	if v, ok := values["key1"]; ok {
+		if x, ok := rest.ToUint32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Id = x
+		}
+	}
+
+	if v, ok := values["key9"]; ok {
+		if x, ok := rest.ToInt32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SInt32 = x
+		}
+	}
+
+	if v, ok := values["key13"]; ok {
+		if x, ok := rest.ToInt64(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.SFixed64 = x
+		}
+	}
+
+	if v, ok := values["key15"]; ok {
+		if x, ok := rest.ToString(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.StringField = x
+		}
+	}
+
+	if v, ok := values["key11"]; ok {
+		if x, ok := rest.ToUint64(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Fixed64 = x
+		}
+	}
+
 	if v, ok := values["key16"]; ok {
-		x, err := rest.ConvertBytes(v[0])
-		if err == nil {
+		if x, ok := rest.ToBytes(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 			}
 			req.HaveAll.BytesField = x
+		}
+	}
+
+	if v, ok := values["key3"]; ok {
+		if x, ok := rest.ToFloat32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Float = x
+		}
+	}
+
+	if v, ok := values["key4"]; ok {
+		if x, ok := rest.ToInt32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.Int32 = x
+		}
+	}
+
+	if v, ok := values["key6"]; ok {
+		if x, ok := rest.ToUint32(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.UInt32 = x
+		}
+	}
+
+	if v, ok := values["key14"]; ok {
+		if x, ok := rest.ToBool(v[0]); ok {
+			if req.HaveAll == nil {
+				req.HaveAll = &pb.HaveAll{}
+			}
+			req.HaveAll.BoolField = x
 		}
 	}
 
@@ -287,8 +269,7 @@ func (s *GeneratedService) DeepPath(ctx context.Context, w http.ResponseWriter, 
 	values := r.URL.Query()
 
 	if v, ok := values["key"]; ok {
-		x, err := rest.ConvertUint32(v[0])
-		if err == nil {
+		if x, ok := rest.ToUint32(v[0]); ok {
 			if req.HaveAll == nil {
 				req.HaveAll = &pb.HaveAll{}
 				if req.HaveAll.Embedded == nil {
@@ -332,33 +313,14 @@ func (s *GeneratedService) DeepPath(ctx context.Context, w http.ResponseWriter, 
 	w.Write(b)
 }
 
-func (s *GeneratedService) DoNotCreate(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	req := pb.DoNotCreateRequest{}
-
-	resp, err := s.GrpcService.DoNotCreate(ctx, &req)
-	if err != nil {
-		s.errorHandler(ctx, w, r, err)
-		return
-	}
-	b, err := json.Marshal(resp)
-	if err != nil {
-		s.errorHandler(ctx, w, r, err)
-		return
-	}
-	w.Header().Set("Content-type", "application/json")
-	rest.SetStatus(w, resp)
-	w.Write(b)
-}
-
 func (s *GeneratedService) GetSmall(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	req := pb.GetSmallRequest{}
 
-	params := ctx.Value("params").(rest.Params)
+	params := rest.GetParams(ctx)
 
-	x0, err := rest.ConvertUint32(params[0].Value)
-	if err == nil {
+	if x, ok := rest.ToUint32(params[0].Value); ok {
 
-		req.Id = x0
+		req.Id = x
 	}
 
 	resp, err := s.GrpcService.GetSmall(ctx, &req)
@@ -379,12 +341,11 @@ func (s *GeneratedService) GetSmall(ctx context.Context, w http.ResponseWriter, 
 func (s *GeneratedService) GetSmall1(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	req := pb.GetSmallRequest{}
 
-	params := ctx.Value("params").(rest.Params)
+	params := rest.GetParams(ctx)
 
-	x0, err := rest.ConvertUint32(params[0].Value)
-	if err == nil {
+	if x, ok := rest.ToUint32(params[0].Value); ok {
 
-		req.Idtest = x0
+		req.Idtest = x
 	}
 
 	resp, err := s.GrpcService.GetSmall1(ctx, &req)
@@ -465,12 +426,11 @@ func (s *GeneratedService) PostSmall(ctx context.Context, w http.ResponseWriter,
 func (s *GeneratedService) DeleteSmall(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	req := pb.DeleteSmallRequest{}
 
-	params := ctx.Value("params").(rest.Params)
+	params := rest.GetParams(ctx)
 
-	x0, err := rest.ConvertUint32(params[0].Value)
-	if err == nil {
+	if x, ok := rest.ToUint32(params[0].Value); ok {
 
-		req.Id = x0
+		req.Id = x
 	}
 
 	resp, err := s.GrpcService.DeleteSmall(ctx, &req)
@@ -491,36 +451,31 @@ func (s *GeneratedService) DeleteSmall(ctx context.Context, w http.ResponseWrite
 func (s *GeneratedService) GetLongPath(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	req := pb.GetLongPathRequest{}
 
-	params := ctx.Value("params").(rest.Params)
+	params := rest.GetParams(ctx)
 
-	x0, err := rest.ConvertUint32(params[0].Value)
-	if err == nil {
+	if x, ok := rest.ToUint32(params[0].Value); ok {
 
-		req.Ida = x0
+		req.Ida = x
 	}
 
-	x1, err := rest.ConvertString(params[1].Value)
-	if err == nil {
+	if x, ok := rest.ToString(params[1].Value); ok {
 
-		req.Idb = x1
+		req.Idb = x
 	}
 
-	x2, err := rest.ConvertUint64(params[2].Value)
-	if err == nil {
+	if x, ok := rest.ToUint64(params[2].Value); ok {
 
-		req.Idc = x2
+		req.Idc = x
 	}
 
-	x3, err := rest.ConvertInt32(params[3].Value)
-	if err == nil {
+	if x, ok := rest.ToInt32(params[3].Value); ok {
 
-		req.Idd = x3
+		req.Idd = x
 	}
 
-	x4, err := rest.ConvertString(params[4].Value)
-	if err == nil {
+	if x, ok := rest.ToString(params[4].Value); ok {
 
-		req.Ide = x4
+		req.Ide = x
 	}
 
 	resp, err := s.GrpcService.GetLongPath(ctx, &req)
@@ -541,10 +496,9 @@ func (s *GeneratedService) GetLongPath(ctx context.Context, w http.ResponseWrite
 func (s *GeneratedService) GetPathPath(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	req := pb.DeepPathPathRequest{}
 
-	params := ctx.Value("params").(rest.Params)
+	params := rest.GetParams(ctx)
 
-	x0, err := rest.ConvertUint32(params[0].Value)
-	if err == nil {
+	if x, ok := rest.ToUint32(params[0].Value); ok {
 		if req.HaveAll == nil {
 			req.HaveAll = &pb.HaveAll{}
 			if req.HaveAll.Embedded == nil {
@@ -554,7 +508,7 @@ func (s *GeneratedService) GetPathPath(ctx context.Context, w http.ResponseWrite
 				}
 			}
 		}
-		req.HaveAll.Embedded.Embedded.Id = x0
+		req.HaveAll.Embedded.Embedded.Id = x
 	}
 
 	resp, err := s.GrpcService.GetPathPath(ctx, &req)
@@ -596,8 +550,7 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 	values := r.URL.Query()
 
 	if v, ok := values["pageOffset"]; ok {
-		x, err := rest.ConvertUint64(v[0])
-		if err == nil {
+		if x, ok := rest.ToUint64(v[0]); ok {
 			if req.Page == nil {
 				req.Page = &pbmap.Page{}
 			}
@@ -606,8 +559,7 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 	}
 
 	if v, ok := values["pageLimit"]; ok {
-		x, err := rest.ConvertUint64(v[0])
-		if err == nil {
+		if x, ok := rest.ToUint64(v[0]); ok {
 			if req.Page == nil {
 				req.Page = &pbmap.Page{}
 			}
@@ -616,8 +568,7 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 	}
 
 	if v, ok := values["sort"]; ok {
-		x, err := rest.ConvertString(v[0])
-		if err == nil {
+		if x, ok := rest.ToString(v[0]); ok {
 			if req.Sort == nil {
 				req.Sort = &pbmap.Sort{}
 			}
@@ -626,8 +577,7 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 	}
 
 	if v, ok := values["desc"]; ok {
-		x, err := rest.ConvertBool(v[0])
-		if err == nil {
+		if x, ok := rest.ToBool(v[0]); ok {
 			if req.Sort == nil {
 				req.Sort = &pbmap.Sort{}
 			}
@@ -636,8 +586,7 @@ func (s *GeneratedService) PageSortFilter(ctx context.Context, w http.ResponseWr
 	}
 
 	if v, ok := values["q"]; ok {
-		x, err := rest.ConvertString(v[0])
-		if err == nil {
+		if x, ok := rest.ToString(v[0]); ok {
 			if req.Filter == nil {
 				req.Filter = &pbmap.Filter{}
 			}
