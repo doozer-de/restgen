@@ -1,4 +1,5 @@
 service_generated.go
 *.pbmap.go
 *.pbmap.go-e
+*.pbmap.goe
 
