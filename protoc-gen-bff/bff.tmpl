@@ -110,7 +110,7 @@ func (s *GeneratedService) {{.Name}}(ctx context.Context, w http.ResponseWriter,
 		s.errorHandler(ctx, w, r, err)
 		return
 	}
-	w.Header().Set("Content-type", "application/json")
+	w.Header().Set("Content-type", "application/json; charset=utf-8")
 	rest.SetStatus(w, resp)
 	w.Write(b)
 }
