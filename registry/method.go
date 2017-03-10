@@ -38,15 +38,10 @@ func (m *Method) setQueryMaps() error {
 		}
 
 		msg, ok := m.Registry.Messages[*fieldProto.TypeName]
-		if !ok {
-			// FIXME(ds) add propper error handling
-			panic(fmt.Errorf("Message %v not found", *fieldProto.TypeName))
-		}
-
-		if !msg.hasQueryMap() {
-			// Message has no QueryMap
+		if !ok || !msg.hasQueryMap() {
 			continue
 		}
+
 		qm, err := msg.getQueryMap()
 
 		if err != nil {
