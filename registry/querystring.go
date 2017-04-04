@@ -2,7 +2,9 @@ package registry
 
 import (
 	"fmt"
+	"log"
 	"net/url"
+	"sort"
 	"strings"
 )
 
@@ -69,14 +71,18 @@ func (q *QueryStringParams) GetParamForKey(key string) *QSParameter {
 func NewQueryStringParams(definition string) (*QueryStringParams, error) {
 	values, err := url.ParseQuery(definition)
 
+	sortedValues := sortParsedQueryString(values)
+
+	log.Println(sortedValues)
+
 	if err != nil {
 		return nil, fmt.Errorf("Error Parsing QueryString: %s", err)
 	}
 
 	var qs QueryStringParams
 
-	for k, v := range values {
-		p, err := qsParameterFromKeyValue(k, v)
+	for _, v := range sortedValues {
+		p, err := qsParameterFromKeyValue(v.Key, v.Values)
 
 		if err != nil {
 			return nil, err
@@ -87,3 +93,33 @@ func NewQueryStringParams(definition string) (*QueryStringParams, error) {
 
 	return &qs, nil
 }
+
+type SortedParsedQueryString []QueryStringKV
+
+type QueryStringKV struct {
+	Key    string
+	Values []string
+}
+
+func sortParsedQueryString(vals url.Values) SortedParsedQueryString {
+	s := make(SortedParsedQueryString, 0, len(vals))
+
+	for k, v := range vals {
+		s = append(s, QueryStringKV{
+			Key:    k,
+			Values: v,
+		})
+	}
+
+	sort.Sort(ByKey(s))
+
+	return s
+}
+
+// ByAge implements sort.Interface for []Person based on
+// the Age field.
+type ByKey SortedParsedQueryString
+
+func (a ByKey) Len() int           { return len(a) }
+func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
