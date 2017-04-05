@@ -2,7 +2,6 @@ package registry
 
 import (
 	"fmt"
-	"log"
 	"net/url"
 	"sort"
 	"strings"
@@ -72,8 +71,6 @@ func NewQueryStringParams(definition string) (*QueryStringParams, error) {
 	values, err := url.ParseQuery(definition)
 
 	sortedValues := sortParsedQueryString(values)
-
-	log.Println(sortedValues)
 
 	if err != nil {
 		return nil, fmt.Errorf("Error Parsing QueryString: %s", err)
