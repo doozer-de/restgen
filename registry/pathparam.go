@@ -10,3 +10,11 @@ type PathParam struct {
 	FieldSanitized string
 	Metadata       *FieldMetadatas
 }
+
+// NewPathParam returns a correct PathParam value
+func NewPathParam(field string) (*PathParam, error) {
+	return &PathParam{
+		FieldSanitized: Sanitize(field),
+		FieldRaw:       field,
+	}, nil
+}

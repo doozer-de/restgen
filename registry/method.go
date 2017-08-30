@@ -59,7 +59,7 @@ func (m *Method) setQueryMaps() error {
 			// In the messages that have a QueryMap we define only a Field in that message. To assign the actual value in the generated code we need the full path to the field.
 			md := msg.GetFieldType(qsp.Field)
 			ownMetaData := []FieldMetadata{
-				FieldMetadata{
+				{
 					typeString: fieldProto.GetTypeName(),
 					ProtoKind:  *fieldProto.Type,
 					Name:       *fieldProto.Name,
