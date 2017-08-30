@@ -29,9 +29,10 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 	var fields Fields
 
 	m := &Message{
-		Package: pkg,
-		Type:    d,
-		Fields:  fields,
+		Package:  pkg,
+		Type:     d,
+		Fields:   fields,
+		Registry: r,
 	}
 
 	for _, field := range d.GetField() {

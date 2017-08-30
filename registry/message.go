@@ -98,6 +98,9 @@ func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 					return &f, nil
 				}
 			} else if *definedField.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+				if definedField.TypeName == nil {
+					panic(*definedField)
+				}
 				if mNew, ok := m.Registry.Messages[*definedField.TypeName]; ok {
 					mds, err := mNew.getFieldType(strings.Join(pathfields[1:], "."))
 					if err != nil {
