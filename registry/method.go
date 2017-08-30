@@ -60,9 +60,9 @@ func (m *Method) setQueryMaps() error {
 			md := msg.GetFieldType(qsp.Field)
 			ownMetaData := []FieldMetadata{
 				{
-					typeString: fieldProto.GetTypeName(),
-					ProtoKind:  *fieldProto.Type,
-					Name:       *fieldProto.Name,
+					Type:      fieldProto.GetTypeName(),
+					ProtoKind: *fieldProto.Type,
+					Name:      *fieldProto.Name,
 				},
 			}
 
@@ -116,6 +116,10 @@ func (m *Method) HasPathParamsMapping() bool {
 // HarmonizedRESTPath returns a cleaned-up version of Mapped REST-Path so it can be registered without conflicts to the router
 func (m *Method) HarmonizedRESTPath() string {
 	return harmonizePathVars(m.RESTPath)
+}
+
+func (m *Method) FullName() string {
+	return fmt.Sprintf("%s.%s", m.Package, m.Name)
 }
 
 func (m *Method) setMethodMapExtension() {

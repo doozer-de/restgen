@@ -39,7 +39,7 @@ var ReservedNames = []string{"Reset", "String", "ProtoMessage", "Descriptor"}
 // Sanitize will apply CamelCase and rename Fields from the ReservedNames list following the scheme: Reset -> Reset_ and so on
 func Sanitize(s string) string {
 	s = CamelCase(s)
-	if isIn(s, ReservedNames) {
+	if isIn(s, ReservedNames...) {
 		return s + "_"
 	}
 

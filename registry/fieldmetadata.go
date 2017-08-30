@@ -9,15 +9,15 @@ import (
 
 // FieldMetadata holds Information needed to generate the code to copy a defined QueryString parameters to a actually field
 type FieldMetadata struct {
-	typeString string
-	ProtoKind  descriptor.FieldDescriptorProto_Type
-	Name       string
+	Type      string
+	ProtoKind descriptor.FieldDescriptorProto_Type
+	Name      string
 }
 
 // GetType gets the type of the final field.
 // Protobuf has a leading . which will be removed for being a proper go identifier
 func (f *FieldMetadata) GetType() string {
-	return strings.TrimLeft(f.typeString, ".")
+	return strings.TrimLeft(f.Type, ".")
 }
 
 // FieldMetadatas are not part of the Registry. They represent a path to a field in the object tree.

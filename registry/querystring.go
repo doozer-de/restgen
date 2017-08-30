@@ -47,7 +47,7 @@ func qsParameterFromKeyValue(key string, value []string) (*QSParameter, error) {
 	qsp.Field = split[0]
 
 	if len(split) == 2 {
-		if !isIn(split[1], supportedTypes) {
+		if !isIn(split[1], supportedTypes...) {
 			return nil, fmt.Errorf("%s is not in the supported types %v", split[1], supportedTypes)
 		}
 		qsp.Type = split[1]

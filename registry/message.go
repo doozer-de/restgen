@@ -13,19 +13,40 @@ import (
 
 // Message wraps a protobuf message with a little extra information for code generation
 type Message struct {
-	protoType *descriptor.DescriptorProto
+	Type *descriptor.DescriptorProto
 
+	File     *File
 	Registry *Registry
 
-	Package string
-	Comment string
-	Index   int
-	Fields  Fields
+	Filename string
+	Package  string
+	Comment  string
+	Index    int
+	Fields   Fields
+}
+
+func NewMessage(d *descriptor.DescriptorProto, f *File, index int) *Message {
+	m := &Message{
+		Type:     d,
+		File:     f,
+		Registry: f.Registry,
+		Package:  f.Package,
+	}
+
+	fields := make(Fields, 0, len(d.GetField()))
+
+	for _, field := range d.GetField() {
+		fields = append(fields, NewField(field, m, f.Registry))
+	}
+
+	m.Fields = fields
+
+	return m
 }
 
 // hasQueryMap returns true if m has a QueryMap defined
 func (m *Message) hasQueryMap() bool {
-	opt := m.protoType.GetOptions()
+	opt := m.Type.GetOptions()
 
 	if opt == nil {
 		return false
@@ -42,7 +63,7 @@ func (m *Message) getQueryMap() (*pbmap.QueryMap, error) {
 	if !m.hasQueryMap() {
 		return nil, fmt.Errorf("Message does not have a querymap")
 	}
-	opt := m.protoType.GetOptions()
+	opt := m.Type.GetOptions()
 	ext, err := proto.GetExtension(opt, pbmap.E_QueryMap)
 
 	if err != nil {
@@ -61,7 +82,7 @@ func (m *Message) getQueryMap() (*pbmap.QueryMap, error) {
 func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 	pathfields := strings.Split(path, ".")
 
-	for _, definedField := range m.protoType.Field {
+	for _, definedField := range m.Type.Field {
 		if strings.Compare(*definedField.Name, pathfields[0]) == 0 {
 			if len(pathfields) == 1 {
 				if *definedField.Type != descriptor.FieldDescriptorProto_TYPE_MESSAGE {
@@ -85,9 +106,9 @@ func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 					mt := []FieldMetadata{
 						{
 							//Success: We found the type value to set for the path in the object tree
-							typeString: *definedField.TypeName,
-							ProtoKind:  *definedField.Type,
-							Name:       *definedField.Name,
+							Type:      *definedField.TypeName,
+							ProtoKind: *definedField.Type,
+							Name:      *definedField.Name,
 						},
 					}
 
@@ -104,7 +125,7 @@ func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 }
 
 func (m *Message) String() string {
-	return fmt.Sprintf(".%s.%s", m.Package, m.protoType.GetName())
+	return fmt.Sprintf(".%s.%s", m.Package, m.Type.GetName())
 }
 
 // GetFieldType returns the type of a field in the struct tree below the message
@@ -119,5 +140,5 @@ func (m *Message) GetFieldType(path string) *FieldMetadatas {
 
 // Name returns the Name of the message
 func (m *Message) Name() string {
-	return m.protoType.GetName()
+	return m.Type.GetName()
 }

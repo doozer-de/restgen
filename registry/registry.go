@@ -23,20 +23,23 @@ type Registry struct {
 	Package  string
 }
 
-func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProto, index int) {
+func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProto) {
 	key := fmt.Sprintf(".%s.%s", pkg, d.GetName())
-	fields := make(Fields, 0, len(d.GetField()))
+	var fields Fields
+
+	m := &Message{
+		Package: pkg,
+		Type:    d,
+		Fields:  fields,
+	}
 
 	for _, field := range d.GetField() {
-		fields = append(fields, NewField(r, field))
+		fields = append(fields, NewField(field, m, r))
 	}
 
-	r.Messages[key] = &Message{
-		Package:   pkg,
-		protoType: d,
-		Registry:  r,
-		Fields:    fields,
-	}
+	m.Fields = fields
+
+	r.Messages[key] = m
 }
 
 func (r *Registry) registerServiceProto(pkg string, gopkg string, d *descriptor.ServiceDescriptorProto, f *descriptor.FileDescriptorProto) {
@@ -44,9 +47,9 @@ func (r *Registry) registerServiceProto(pkg string, gopkg string, d *descriptor.
 		Package:   pkg,
 		GoPackage: gopkg,
 		Name:      d.GetName(),
-		protoType: d,
-		Imports:   make([]string, 0),
-		Methods:   make([]*Method, 0, len(d.Method)),
+		Type:      d,
+		Imports:   []string{},
+		Methods:   make(map[string]*Method),
 		Registry:  r,
 		File:      f,
 	}
@@ -64,11 +67,11 @@ func (r *Registry) registerServiceProto(pkg string, gopkg string, d *descriptor.
 	r.Service.Version = ext.Version
 
 	for _, method := range d.GetMethod() {
-		r.Service.registerMethod(method)
+		r.Service.RegisterMethod(method)
 	}
 }
 
-// New createsa  new Registry that will read all the information neede from the given CodeGeneratorRequest
+// New creates a new Registry that will read all the information neede from the given CodeGeneratorRequest
 func New(r *plugin.CodeGeneratorRequest) *Registry {
 	reg := &Registry{
 		Files:    make(map[string]*File),
@@ -78,12 +81,12 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 	files := r.GetProtoFile()
 
 	// Register all Messages
-	for i, f := range files {
-		reg.Files[f.GetName()] = &File{File: f, Name: f.GetName(), Index: i}
+	for _, f := range files {
+		reg.Files[f.GetName()] = &File{File: f, Name: f.GetName()}
 		pkg := f.GetPackage()
 
-		for j, m := range f.GetMessageType() {
-			reg.registerMessageProto(pkg, m, j)
+		for _, m := range f.GetMessageType() {
+			reg.registerMessageProto(pkg, m)
 		}
 	}
 
@@ -107,13 +110,6 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 	}
 	reg.registerServiceProto(pkg, gopkg, svc, serviceFile)
 	return reg
-}
-
-// File wraps a FileDescriptorProto with some helpers
-type File struct {
-	File  *descriptor.FileDescriptorProto
-	Name  string
-	Index int
 }
 
 // QueryStringParam is provides all the information nessesary for the code generation to map on query string parameter to a go field

@@ -12,23 +12,23 @@ import (
 
 // Service wraps a ServiceDescriptorProto with additions for code Generation
 type Service struct {
-	protoType *descriptor.ServiceDescriptorProto
-	Registry  *Registry
-	File      *descriptor.FileDescriptorProto
+	Type     *descriptor.ServiceDescriptorProto
+	Registry *Registry
+	File     *descriptor.FileDescriptorProto
 
 	Package       string
 	GoPackage     string
 	Name          string
 	Imports       []string
 	BaseURI       string
-	Methods       []*Method
+	Methods       map[string]*Method
 	Comment       string
 	Index         int
 	TargetPackage string
 	Version       string
 }
 
-func (s *Service) registerMethod(method *descriptor.MethodDescriptorProto) {
+func (s *Service) RegisterMethod(method *descriptor.MethodDescriptorProto) {
 	m := &Method{
 		Type:     method,
 		Name:     *method.Name,
@@ -37,11 +37,11 @@ func (s *Service) registerMethod(method *descriptor.MethodDescriptorProto) {
 	}
 
 	if inputType, ok := s.Registry.Messages[*method.InputType]; ok {
-		m.InputType = inputType.protoType
+		m.InputType = inputType.Type
 	}
 
 	if outputType, ok := s.Registry.Messages[*method.OutputType]; ok {
-		m.OutputType = outputType.protoType
+		m.OutputType = outputType.Type
 	}
 
 	m.setMethodMapExtension()
@@ -51,7 +51,7 @@ func (s *Service) registerMethod(method *descriptor.MethodDescriptorProto) {
 		log.Fatalf("Could not read the query map options: %s", err)
 	}
 
-	s.Methods = append(s.Methods, m)
+	s.Methods[m.Name] = m
 }
 
 // GetMappedMethods returns all the Methods of the currenct service that have a MethodMap extension
@@ -74,7 +74,7 @@ func (s *Service) ServiceType() string {
 }
 
 func (s *Service) getServiceMapExtension() (*pbmap.ServiceMap, error) {
-	opt := s.protoType.GetOptions()
+	opt := s.Type.GetOptions()
 	if opt == nil {
 		return nil, fmt.Errorf("No Options on Service")
 	}
