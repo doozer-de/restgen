@@ -14,7 +14,7 @@ import (
 type Service struct {
 	Type     *descriptor.ServiceDescriptorProto
 	Registry *Registry
-	File     *descriptor.FileDescriptorProto
+	File     *File
 
 	Package       string
 	GoPackage     string

@@ -16,12 +16,11 @@ type Messages map[string]*Message
 
 // The Registry is the root for registering the Types found in the protobuf structures from the compiler
 type Registry struct {
-	Files       map[string]*File
-	FilesI      map[int]*File // To build a path hierarchy to get the source locations
-	Service     *Service
-	Messages    Messages
-	Package     string
-	ServiceFile *File
+	Files    map[string]*File
+	FilesI   map[int]*File // To build a path hierarchy to get the source locations
+	Service  *Service
+	Messages Messages
+	Package  string
 }
 
 func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProto) {
@@ -53,7 +52,7 @@ func (r *Registry) registerServiceProto(pkg string, gopkg string, d *descriptor.
 		Imports:   []string{},
 		Methods:   make(map[string]*Method),
 		Registry:  r,
-		File:      f,
+		File:      NewFile(f, r),
 	}
 
 	r.Service = s
@@ -94,28 +93,21 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 
 	// The last file is the service file we want to generate code for (the imports come first)
 	serviceFile := files[len(files)-1]
-	reg.ServiceFile = NewFile(serviceFile, reg)
 	svcs := serviceFile.GetService()
 
-	// FIXME(cs) Temporary hack for DART generation that are library types
-	if !isIn(*serviceFile.Package, "derror", "pbmap", "money", "status", "event") {
-		if len(svcs) == 0 {
-			log.Fatal("No service found in last file")
-		}
-
+	if len(svcs) > 0 {
 		svc := svcs[0]
 		if reg.Service != nil {
-			log.Fatal("Trying to register more than one service")
+			log.Fatal("Only one service in file supported")
 		}
 
-		pkg := serviceFile.GetPackage()
 		gopkg := serviceFile.GetOptions().GetGoPackage()
 
-		if pkg == "" {
-			log.Fatal("In the service-file the option go_package is needen with the full path of the package to generate correct pathes.")
+		if gopkg == "" {
+			log.Fatal("In the service-file the option go_package is needed with the full path of the package to generate correct pathes.")
 		}
 
-		reg.registerServiceProto(pkg, gopkg, svc, serviceFile)
+		reg.registerServiceProto(serviceFile.GetPackage(), gopkg, svc, serviceFile)
 	}
 
 	return reg
