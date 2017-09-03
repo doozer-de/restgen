@@ -19,6 +19,7 @@ type Registry struct {
 	Files    map[string]*File
 	FilesI   map[int]*File // To build a path hierarchy to get the source locations
 	Service  *Service
+	RootFile *File
 	Messages Messages
 	Package  string
 }
@@ -43,19 +44,32 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 	r.Messages[key] = m
 }
 
-func (r *Registry) registerServiceProto(pkg string, gopkg string, d *descriptor.ServiceDescriptorProto, f *descriptor.FileDescriptorProto) {
+func (r *Registry) registerServiceProto(file *File) {
+	svcs := file.File.GetService()
+
+	if len(svcs) == 0 {
+		return
+	}
+	svc := svcs[0]
+	if r.Service != nil {
+		log.Fatal("Only one service in file supported")
+	}
+
+	gopkg := *file.File.GetOptions().GoPackage
+
 	s := &Service{
-		Package:   pkg,
+		Package:   file.Package,
 		GoPackage: gopkg,
-		Name:      d.GetName(),
-		Type:      d,
+		Name:      svc.GetName(),
+		Type:      svc,
 		Imports:   []string{},
 		Methods:   make(map[string]*Method),
 		Registry:  r,
-		File:      NewFile(f, r),
+		File:      file,
 	}
 
 	r.Service = s
+	r.RootFile = s.File
 
 	ext, err := r.Service.getServiceMapExtension()
 
@@ -67,7 +81,7 @@ func (r *Registry) registerServiceProto(pkg string, gopkg string, d *descriptor.
 	r.Service.TargetPackage = ext.TargetPackage
 	r.Service.Version = ext.Version
 
-	for _, method := range d.GetMethod() {
+	for _, method := range svc.GetMethod() {
 		r.Service.RegisterMethod(method)
 	}
 }
@@ -92,23 +106,9 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 	}
 
 	// The last file is the service file we want to generate code for (the imports come first)
-	serviceFile := files[len(files)-1]
-	svcs := serviceFile.GetService()
-
-	if len(svcs) > 0 {
-		svc := svcs[0]
-		if reg.Service != nil {
-			log.Fatal("Only one service in file supported")
-		}
-
-		gopkg := serviceFile.GetOptions().GetGoPackage()
-
-		if gopkg == "" {
-			log.Fatal("In the service-file the option go_package is needed with the full path of the package to generate correct pathes.")
-		}
-
-		reg.registerServiceProto(serviceFile.GetPackage(), gopkg, svc, serviceFile)
-	}
+	rootFile := files[len(files)-1]
+	reg.RootFile = NewFile(rootFile, reg)
+	reg.registerServiceProto(reg.RootFile)
 
 	return reg
 }
