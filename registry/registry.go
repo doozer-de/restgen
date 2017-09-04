@@ -31,10 +31,29 @@ func (ms *Messages) Get(key string) (*Message, bool) {
 	return nil, false
 }
 
+type Files []*File
+
+func (fs *Files) Add(f *File) {
+	for _, c := range *fs {
+		if c.Name == f.Name {
+			return
+		}
+	}
+	(*fs) = append((*fs), f)
+}
+
+func (fs *Files) Get(key string) (*File, bool) {
+	for _, c := range *fs {
+		if c.Name == key {
+			return c, true
+		}
+	}
+	return nil, false
+}
+
 // The Registry is the root for registering the Types found in the protobuf structures from the compiler
 type Registry struct {
-	Files    map[string]*File
-	FilesI   map[int]*File // To build a path hierarchy to get the source locations
+	Files    Files
 	Service  *Service
 	RootFile *File
 	Messages Messages
@@ -105,7 +124,7 @@ func (r *Registry) registerServiceProto(file *File) {
 // New createsa  new Registry that will read all the information neede from the given CodeGeneratorRequest
 func New(r *plugin.CodeGeneratorRequest) *Registry {
 	reg := &Registry{
-		Files:    make(map[string]*File),
+		Files:    []*File{},
 		Messages: []*Message{},
 	}
 
@@ -113,7 +132,7 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 
 	// Register all Messages
 	for _, f := range files {
-		reg.Files[f.GetName()] = &File{File: f, Name: f.GetName()}
+		reg.Files.Add(&File{File: f, Name: f.GetName()})
 		pkg := f.GetPackage()
 
 		for _, m := range f.GetMessageType() {
