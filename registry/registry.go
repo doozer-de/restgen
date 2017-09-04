@@ -1,7 +1,6 @@
 package registry
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -12,7 +11,25 @@ import (
 const restmapimport = "github.com/doozer-de/restgen/pbmap"
 
 // Messages is a map from the messages name ot the Message
-type Messages map[string]*Message
+type Messages []*Message
+
+func (ms *Messages) Add(m *Message) {
+	for _, c := range *ms {
+		if c.String() == m.String() {
+			return
+		}
+	}
+	(*ms) = append((*ms), m)
+}
+
+func (ms *Messages) Get(key string) (*Message, bool) {
+	for _, c := range *ms {
+		if c.String() == key {
+			return c, true
+		}
+	}
+	return nil, false
+}
 
 // The Registry is the root for registering the Types found in the protobuf structures from the compiler
 type Registry struct {
@@ -25,7 +42,6 @@ type Registry struct {
 }
 
 func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProto) {
-	key := fmt.Sprintf(".%s.%s", pkg, d.GetName())
 	var fields Fields
 
 	m := &Message{
@@ -41,7 +57,7 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 
 	m.Fields = fields
 
-	r.Messages[key] = m
+	r.Messages.Add(m)
 }
 
 func (r *Registry) registerServiceProto(file *File) {
@@ -90,7 +106,7 @@ func (r *Registry) registerServiceProto(file *File) {
 func New(r *plugin.CodeGeneratorRequest) *Registry {
 	reg := &Registry{
 		Files:    make(map[string]*File),
-		Messages: make(map[string]*Message),
+		Messages: []*Message{},
 	}
 
 	files := r.GetProtoFile()

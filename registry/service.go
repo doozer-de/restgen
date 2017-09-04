@@ -36,11 +36,11 @@ func (s *Service) RegisterMethod(method *descriptor.MethodDescriptorProto) {
 		Registry: s.Registry,
 	}
 
-	if inputType, ok := s.Registry.Messages[*method.InputType]; ok {
+	if inputType, ok := s.Registry.Messages.Get(*method.InputType); ok {
 		m.InputType = inputType.Type
 	}
 
-	if outputType, ok := s.Registry.Messages[*method.OutputType]; ok {
+	if outputType, ok := s.Registry.Messages.Get(*method.OutputType); ok {
 		m.OutputType = outputType.Type
 	}
 

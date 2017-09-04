@@ -37,7 +37,7 @@ func (m *Method) setQueryMaps() error {
 			continue
 		}
 
-		msg, ok := m.Registry.Messages[*fieldProto.TypeName]
+		msg, ok := m.Registry.Messages.Get(*fieldProto.TypeName)
 		if !ok || !msg.hasQueryMap() {
 			continue
 		}
@@ -150,7 +150,11 @@ func (m *Method) setMethodMapExtension() {
 	}
 	m.RESTQueryString = *qs
 
-	message := m.Registry.Messages[*m.Type.InputType]
+	message, ok := m.Registry.Messages.Get(*m.Type.InputType)
+
+	if !ok {
+		return
+	}
 	for i, param := range m.RESTQueryString {
 		m.RESTQueryString[i].Metadata = message.GetFieldType(param.Field)
 	}

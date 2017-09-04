@@ -101,7 +101,7 @@ func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 				if definedField.TypeName == nil {
 					panic(*definedField)
 				}
-				if mNew, ok := m.Registry.Messages[*definedField.TypeName]; ok {
+				if mNew, ok := m.Registry.Messages.Get(*definedField.TypeName); ok {
 					mds, err := mNew.getFieldType(strings.Join(pathfields[1:], "."))
 					if err != nil {
 						return nil, fmt.Errorf("%s.%s", pathfields[0], err)
