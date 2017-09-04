@@ -10,6 +10,27 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
+type Methods []*Method
+
+func (ms *Methods) Add(m *Method) {
+	for _, c := range *ms {
+		if c.Name == m.Name {
+			return
+		}
+	}
+	(*ms) = append((*ms), m)
+
+}
+
+func (ms *Methods) Get(key string) (*Method, bool) {
+	for _, c := range *ms {
+		if c.Name == key {
+			return c, true
+		}
+	}
+	return nil, false
+}
+
 // Service wraps a ServiceDescriptorProto with additions for code Generation
 type Service struct {
 	Type     *descriptor.ServiceDescriptorProto
@@ -21,7 +42,7 @@ type Service struct {
 	Name          string
 	Imports       []string
 	BaseURI       string
-	Methods       map[string]*Method
+	Methods       Methods
 	Comment       string
 	Index         int
 	TargetPackage string
@@ -51,7 +72,7 @@ func (s *Service) RegisterMethod(method *descriptor.MethodDescriptorProto) {
 		log.Fatalf("Could not read the query map options: %s", err)
 	}
 
-	s.Methods[m.Name] = m
+	s.Methods.Add(m)
 }
 
 // GetMappedMethods returns all the Methods of the currenct service that have a MethodMap extension

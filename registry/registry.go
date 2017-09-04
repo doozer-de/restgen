@@ -79,7 +79,7 @@ func (r *Registry) registerServiceProto(file *File) {
 		Name:      svc.GetName(),
 		Type:      svc,
 		Imports:   []string{},
-		Methods:   make(map[string]*Method),
+		Methods:   []*Method{},
 		Registry:  r,
 		File:      file,
 	}
