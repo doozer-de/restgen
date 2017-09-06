@@ -6,6 +6,26 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
+type Files []*File
+
+func (fs *Files) Add(f *File) {
+	for _, c := range *fs {
+		if c.Name == f.Name {
+			return
+		}
+	}
+	(*fs) = append((*fs), f)
+}
+
+func (fs *Files) Get(key string) (*File, bool) {
+	for _, c := range *fs {
+		if c.Name == key {
+			return c, true
+		}
+	}
+	return nil, false
+}
+
 type File struct {
 	File     *descriptor.FileDescriptorProto
 	Name     string

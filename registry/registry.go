@@ -31,26 +31,6 @@ func (ms *Messages) Get(key string) (*Message, bool) {
 	return nil, false
 }
 
-type Files []*File
-
-func (fs *Files) Add(f *File) {
-	for _, c := range *fs {
-		if c.Name == f.Name {
-			return
-		}
-	}
-	(*fs) = append((*fs), f)
-}
-
-func (fs *Files) Get(key string) (*File, bool) {
-	for _, c := range *fs {
-		if c.Name == key {
-			return c, true
-		}
-	}
-	return nil, false
-}
-
 // The Registry is the root for registering the Types found in the protobuf structures from the compiler
 type Registry struct {
 	Files    Files

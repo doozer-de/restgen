@@ -7,6 +7,10 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
+// FieldMetadatas are not part of the Registry. They represent a path to a field in the object tree.
+// like r.User.Name.Firstname in a Protobuf Request.
+type FieldMetadatas []FieldMetadata
+
 // FieldMetadata holds Information needed to generate the code to copy a defined QueryString parameters to a actually field
 type FieldMetadata struct {
 	Type      string
@@ -19,10 +23,6 @@ type FieldMetadata struct {
 func (f *FieldMetadata) GetType() string {
 	return strings.TrimLeft(f.Type, ".")
 }
-
-// FieldMetadatas are not part of the Registry. They represent a path to a field in the object tree.
-// like r.User.Name.Firstname in a Protobuf Request.
-type FieldMetadatas []FieldMetadata
 
 // Generate returns the go code to set a field value in an struct tree
 // Since protobuf works with pointer intermediate structs have to be instantiated
