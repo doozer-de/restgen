@@ -66,6 +66,6 @@ message ServiceMap {
 	string target_package = 3;
 }
 
-extend google.protobuf.ServiceOptions {
-	ServiceMap service_map = 87654323;
+extend google.protobuf.FileOptions {
+	option string dart_package = 9813242;
 }
