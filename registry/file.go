@@ -1,8 +1,6 @@
 package registry
 
 import (
-	"fmt"
-
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
@@ -32,6 +30,7 @@ type File struct {
 	Messages []*Message
 	Package  string
 	Registry *Registry
+	Options  map[string]string
 }
 
 func NewFile(f *descriptor.FileDescriptorProto, r *Registry) *File {
@@ -42,23 +41,23 @@ func NewFile(f *descriptor.FileDescriptorProto, r *Registry) *File {
 		Registry: r,
 	}
 
-	isExtension := false
-	messages := make([]*Message, 0, len(f.MessageType))
+	// isExtension := false
+	var messages []*Message
 
 	for j, m := range f.MessageType {
-		for _, e := range f.Extension {
-			if *e.TypeName == fmt.Sprintf(".%s.%s", file.Package, *m.Name) {
-				isExtension = true
+		// for _, e := range f.Extension {
+		// if *e.TypeName == fmt.Sprintf(".%s.%s", file.Package, *m.Name) {
+		// 	isExtension = true
 
-				break
-			}
-		}
+		// 	break
+		// }
+		// }
 
-		if !isExtension {
-			messages = append(messages, NewMessage(m, file, j))
-		}
+		// if !isExtension {
+		messages = append(messages, NewMessage(m, file, j))
+		// }
 
-		isExtension = false
+		// isExtension = false
 	}
 
 	file.Messages = messages
