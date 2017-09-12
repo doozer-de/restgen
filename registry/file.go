@@ -41,23 +41,10 @@ func NewFile(f *descriptor.FileDescriptorProto, r *Registry) *File {
 		Registry: r,
 	}
 
-	// isExtension := false
 	var messages []*Message
 
 	for j, m := range f.MessageType {
-		// for _, e := range f.Extension {
-		// if *e.TypeName == fmt.Sprintf(".%s.%s", file.Package, *m.Name) {
-		// 	isExtension = true
-
-		// 	break
-		// }
-		// }
-
-		// if !isExtension {
 		messages = append(messages, NewMessage(m, file, j))
-		// }
-
-		// isExtension = false
 	}
 
 	file.Messages = messages
