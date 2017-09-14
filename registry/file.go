@@ -6,6 +6,8 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
+const OptionDartPackage = "dart_package"
+
 type Files []*File
 
 func (fs *Files) Add(f *File) {
@@ -60,7 +62,7 @@ func getAdditionalOptions(f *descriptor.FileDescriptorProto) map[string]string {
 	m := make(map[string]string)
 
 	if dp, ok := dartPackageOption(f); ok {
-		m["DartPackage"] = dp
+		m[OptionDartPackage] = dp
 	}
 
 	return m

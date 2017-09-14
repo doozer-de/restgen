@@ -112,7 +112,8 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 
 	// Register all Messages
 	for _, f := range files {
-		reg.Files.Add(&File{Type: f, Name: f.GetName()})
+		reg.Files.Add(NewFile(f, reg))
+
 		pkg := f.GetPackage()
 
 		for _, m := range f.GetMessageType() {
@@ -121,8 +122,8 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 	}
 
 	// The last file is the service file we want to generate code for (the imports come first)
-	rootFile := files[len(files)-1]
-	reg.RootFile = NewFile(rootFile, reg)
+	rootFile := reg.Files[len(reg.Files)-1]
+	reg.RootFile = rootFile
 	reg.registerServiceProto(reg.RootFile)
 
 	return reg
