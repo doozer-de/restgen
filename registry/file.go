@@ -1,6 +1,8 @@
 package registry
 
 import (
+	"github.com/doozer-de/restgen/pbmap"
+	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
@@ -25,20 +27,22 @@ func (fs *Files) Get(key string) (*File, bool) {
 }
 
 type File struct {
-	File     *descriptor.FileDescriptorProto
+	Type     *descriptor.FileDescriptorProto
 	Name     string
 	Messages []*Message
 	Package  string
 	Registry *Registry
-	Options  map[string]string
+	// Options holds additional options. For example our dart_package options
+	Options map[string]string
 }
 
 func NewFile(f *descriptor.FileDescriptorProto, r *Registry) *File {
 	file := &File{
-		File:     f,
+		Type:     f,
 		Name:     *f.Name,
 		Package:  f.GetPackage(),
 		Registry: r,
+		Options:  getAdditionalOptions(f),
 	}
 
 	var messages []*Message
@@ -50,4 +54,35 @@ func NewFile(f *descriptor.FileDescriptorProto, r *Registry) *File {
 	file.Messages = messages
 
 	return file
+}
+
+func getAdditionalOptions(f *descriptor.FileDescriptorProto) map[string]string {
+	m := make(map[string]string)
+
+	if dp, ok := dartPackageOption(f); ok {
+		m["DartPackage"] = dp
+	}
+
+	return m
+}
+
+func dartPackageOption(f *descriptor.FileDescriptorProto) (string, bool) {
+	opt := f.GetOptions()
+	if opt == nil {
+		return "", false
+	}
+
+	if !proto.HasExtension(opt, pbmap.E_DartPackage) {
+		return "", false
+	}
+	ext, err := proto.GetExtension(opt, pbmap.E_DartPackage)
+	if err != nil {
+		return "", false
+	}
+	sm, ok := ext.(*string)
+	if !ok {
+		return "", false
+	}
+
+	return *sm, true
 }

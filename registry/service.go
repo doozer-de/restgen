@@ -94,6 +94,14 @@ func (s *Service) ServiceType() string {
 	return fmt.Sprintf("%s.%sServer", s.Package, s.Name)
 }
 
+func (s *Service) HasServiceMapExtension() bool {
+	if _, err := s.getServiceMapExtension(); err != nil {
+		return true
+	}
+
+	return false
+}
+
 func (s *Service) getServiceMapExtension() (*pbmap.ServiceMap, error) {
 	opt := s.Type.GetOptions()
 	if opt == nil {

@@ -60,7 +60,7 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 }
 
 func (r *Registry) registerServiceProto(file *File) {
-	svcs := file.File.GetService()
+	svcs := file.Type.GetService()
 
 	if len(svcs) == 0 {
 		return
@@ -70,7 +70,7 @@ func (r *Registry) registerServiceProto(file *File) {
 		log.Fatal("Only one service in file supported")
 	}
 
-	gopkg := *file.File.GetOptions().GoPackage
+	gopkg := *file.Type.GetOptions().GoPackage
 
 	s := &Service{
 		Package:   file.Package,
@@ -112,7 +112,7 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 
 	// Register all Messages
 	for _, f := range files {
-		reg.Files.Add(&File{File: f, Name: f.GetName()})
+		reg.Files.Add(&File{Type: f, Name: f.GetName()})
 		pkg := f.GetPackage()
 
 		for _, m := range f.GetMessageType() {

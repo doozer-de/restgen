@@ -36,18 +36,33 @@ func main() {
 	out, err := generate(req)
 
 	if err != nil {
-		log.Fatalf("Could not generate: %s", err)
+		s := err.Error()
+		emit(&plugin.CodeGeneratorResponse{Error: &s})
+		return
 	}
 
 	emit(&plugin.CodeGeneratorResponse{File: out})
 }
 
+func ignore() []*plugin.CodeGeneratorResponse_File {
+	s := "// +build ignore \n\n// Nothing to see here, just a dummy"
+	name := "noservice_gen.go"
+	f := &plugin.CodeGeneratorResponse_File{}
+	f.Content = &s
+	f.Name = &name
+	return []*plugin.CodeGeneratorResponse_File{f}
+}
+
 func generate(r *plugin.CodeGeneratorRequest) ([]*plugin.CodeGeneratorResponse_File, error) {
 	reg := registry.New(r)
 
-	out := &bytes.Buffer{}
-
 	f := plugin.CodeGeneratorResponse_File{}
+
+	if reg.Service == nil || !reg.Service.HasServiceMapExtension() {
+		return ignore(), nil
+	}
+
+	out := &bytes.Buffer{}
 
 	funcMap := template.FuncMap{
 		"GetConverterName": emitters.GetConverterName,
