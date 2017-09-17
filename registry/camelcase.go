@@ -6,6 +6,7 @@ func CamelCase(s string) string {
 	if s == "" {
 		return ""
 	}
+
 	t := make([]byte, 0, 32)
 	i := 0
 	if s[0] == '_' {
@@ -17,19 +18,23 @@ func CamelCase(s string) string {
 		if c == '_' && i+1 < len(s) && isASCIILower(s[i+1]) {
 			continue // Skip the underscore in s.
 		}
+
 		if isASCIIDigit(c) {
 			t = append(t, c)
 			continue
 		}
+
 		if isASCIILower(c) {
 			c ^= ' ' // Make it a capital letter.
 		}
+
 		t = append(t, c) // Guaranteed not lower case.
 		for i+1 < len(s) && isASCIILower(s[i+1]) {
 			i++
 			t = append(t, s[i])
 		}
 	}
+
 	return string(t)
 }
 

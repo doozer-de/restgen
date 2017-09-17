@@ -95,14 +95,21 @@ func (s *Service) ServiceType() string {
 }
 
 func (s *Service) HasServiceMapExtension() bool {
-	if _, err := s.getServiceMapExtension(); err != nil {
-		return true
+	opt := s.Type.GetOptions()
+	if opt == nil {
+		return false
+	}
+	if !proto.HasExtension(opt, pbmap.E_ServiceMap) {
+		return false
 	}
 
-	return false
+	return true
 }
 
 func (s *Service) getServiceMapExtension() (*pbmap.ServiceMap, error) {
+	if !s.HasServiceMapExtension() {
+		return nil, fmt.Errorf("%s does not have a ServiceMap Extension", s.Name)
+	}
 	opt := s.Type.GetOptions()
 	if opt == nil {
 		return nil, fmt.Errorf("No Options on Service")
