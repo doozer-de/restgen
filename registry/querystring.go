@@ -69,12 +69,11 @@ func (q *QueryStringParams) GetParamForKey(key string) *QSParameter {
 // NewQueryStringParams creates at new QueryString from the given definition string
 func NewQueryStringParams(definition string) (*QueryStringParams, error) {
 	values, err := url.ParseQuery(definition)
-
-	sortedValues := sortParsedQueryString(values)
-
 	if err != nil {
 		return nil, fmt.Errorf("Error Parsing QueryString: %s", err)
 	}
+
+	sortedValues := sortParsedQueryString(values)
 
 	var qs QueryStringParams
 

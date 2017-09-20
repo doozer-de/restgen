@@ -30,6 +30,10 @@ type Method struct {
 
 // getQueryMaps returns all the querymaps of the  m or it's submessages
 func (m *Method) setQueryMaps() error {
+	if !m.HasMethodMap() {
+		return nil
+	}
+
 	var foundQueryMap bool
 	for _, fieldProto := range m.InputType.GetField() {
 		if fieldProto.GetType() != descriptor.FieldDescriptorProto_TYPE_MESSAGE {
