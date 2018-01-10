@@ -126,7 +126,7 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 
 	files := r.GetProtoFile()
 
-	// Register all Messages
+	// Register all Messages, Enums
 	for _, f := range files {
 		reg.Files.Add(NewFile(f, reg))
 

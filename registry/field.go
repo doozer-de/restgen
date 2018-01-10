@@ -49,3 +49,7 @@ func (f *Field) IsMessage() bool {
 func (f *Field) IsIntermediateMap() bool {
 	return strings.HasSuffix((*f.Type).GetTypeName(), "Entry")
 }
+
+func (f *Field) IsEnum() bool {
+	return (*f.Type).GetType() == descriptor.FieldDescriptorProto_TYPE_ENUM
+}
