@@ -2,3 +2,4 @@ service_generated.go
 pbmap/*.pb.go-e
 pbmap/*.pb.goe
 
+.idea
