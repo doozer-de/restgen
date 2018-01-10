@@ -19,7 +19,7 @@ func (ms *Messages) Add(m *Message) {
 			return
 		}
 	}
-	(*ms) = append((*ms), m)
+	*ms = append(*ms, m)
 }
 
 func (ms *Messages) Get(key string) (*Message, bool) {
@@ -37,6 +37,7 @@ type Registry struct {
 	Service  *Service
 	RootFile *File
 	Messages Messages
+	Enums Enums
 	Package  string
 }
 
@@ -46,7 +47,6 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 	m := &Message{
 		Package:  pkg,
 		Type:     d,
-		Fields:   fields,
 		Registry: r,
 	}
 
@@ -57,6 +57,22 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 	m.Fields = fields
 
 	r.Messages.Add(m)
+}
+
+func (r *Registry) registerEnumProto(pkg string, d *descriptor.EnumDescriptorProto) {
+	e := &Enum{
+		Package: pkg,
+		Type: d,
+		Registry: r,
+	}
+
+	var values EnumValues
+	for _, value := range d.GetValue() {
+		values = append(values, NewEnumValue(value, e, r))
+	}
+	e.Values = values
+
+	r.Enums.Add(e)
 }
 
 func (r *Registry) registerServiceProto(file *File) {
@@ -119,6 +135,11 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 		for _, m := range f.GetMessageType() {
 			reg.registerMessageProto(pkg, m)
 		}
+
+		for _, e := range f.GetEnumType() {
+			reg.registerEnumProto(pkg, e)
+		}
+
 	}
 
 	// The last file is the service file we want to generate code for (the imports come first)
