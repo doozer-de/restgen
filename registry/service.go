@@ -18,7 +18,7 @@ func (ms *Methods) Add(m *Method) {
 			return
 		}
 	}
-	(*ms) = append((*ms), m)
+	*ms = append(*ms, m)
 
 }
 
@@ -112,18 +112,18 @@ func (s *Service) getServiceMapExtension() (*pbmap.ServiceMap, error) {
 	}
 	opt := s.Type.GetOptions()
 	if opt == nil {
-		return nil, fmt.Errorf("No Options on Service")
+		return nil, fmt.Errorf("no Options on Service")
 	}
 	if !proto.HasExtension(opt, pbmap.E_ServiceMap) {
 		return nil, fmt.Errorf("ServiceMap Extension not present")
 	}
 	ext, err := proto.GetExtension(opt, pbmap.E_ServiceMap)
 	if err != nil {
-		return nil, fmt.Errorf("Error getting ServiceMap extension")
+		return nil, fmt.Errorf("error getting ServiceMap extension")
 	}
 	sm, ok := ext.(*pbmap.ServiceMap)
 	if !ok {
-		return nil, fmt.Errorf("Error getting ServiceMap extension, wrong type")
+		return nil, fmt.Errorf("error getting ServiceMap extension, wrong type")
 	}
 	return sm, nil
 }

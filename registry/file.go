@@ -16,7 +16,7 @@ func (fs *Files) Add(f *File) {
 			return
 		}
 	}
-	(*fs) = append((*fs), f)
+	*fs = append(*fs, f)
 }
 
 func (fs *Files) Get(key string) (*File, bool) {
@@ -32,6 +32,7 @@ type File struct {
 	Type     *descriptor.FileDescriptorProto
 	Name     string
 	Messages []*Message
+	Enums    []*Enum
 	Package  string
 	Registry *Registry
 	// Options holds additional options. For example our dart_package options
@@ -47,13 +48,13 @@ func NewFile(f *descriptor.FileDescriptorProto, r *Registry) *File {
 		Options:  getAdditionalOptions(f),
 	}
 
-	var messages []*Message
-
 	for j, m := range f.MessageType {
-		messages = append(messages, NewMessage(m, file, j))
+		file.Messages = append(file.Messages, NewMessage(m, file, j))
 	}
 
-	file.Messages = messages
+	for j, e := range f.EnumType {
+		file.Enums = append(file.Enums, NewEnum(e, file, j))
+	}
 
 	return file
 }

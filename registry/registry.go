@@ -37,7 +37,7 @@ type Registry struct {
 	Service  *Service
 	RootFile *File
 	Messages Messages
-	Enums Enums
+	Enums    Enums
 	Package  string
 }
 
@@ -61,8 +61,8 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 
 func (r *Registry) registerEnumProto(pkg string, d *descriptor.EnumDescriptorProto) {
 	e := &Enum{
-		Package: pkg,
-		Type: d,
+		Package:  pkg,
+		Type:     d,
 		Registry: r,
 	}
 

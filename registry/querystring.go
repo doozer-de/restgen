@@ -41,7 +41,7 @@ func qsParameterFromKeyValue(key string, value []string) (*QSParameter, error) {
 	split := strings.Split(s, ":")
 
 	if len(split) > 2 {
-		return nil, fmt.Errorf("Invalid format of the parameter defintion, at most one : allowed: %s", s)
+		return nil, fmt.Errorf("invalid format of the parameter defintion, at most one : allowed: %s", s)
 	}
 
 	qsp.Field = split[0]
@@ -70,7 +70,7 @@ func (q *QueryStringParams) GetParamForKey(key string) *QSParameter {
 func NewQueryStringParams(definition string) (*QueryStringParams, error) {
 	values, err := url.ParseQuery(definition)
 	if err != nil {
-		return nil, fmt.Errorf("Error Parsing QueryString: %s", err)
+		return nil, fmt.Errorf("error Parsing QueryString: %s", err)
 	}
 
 	sortedValues := sortParsedQueryString(values)

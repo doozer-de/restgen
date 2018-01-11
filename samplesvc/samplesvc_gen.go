@@ -47,7 +47,7 @@ func (s *GeneratedService) GetBaseURI() string {
 
 func (s *GeneratedService) SetErrorHandler(h rest.ErrorHandler) error {
 	if h == nil {
-		return fmt.Errorf("ErrorHandler cannot be nil")
+		return fmt.Errorf("errorHandler cannot be nil")
 	}
 	s.errorHandler = h
 	return nil
@@ -60,7 +60,7 @@ type GeneratedService struct {
 
 func NewGeneratedService(s pb.BigTestServiceServer, errorHandler rest.ErrorHandler) (*GeneratedService, error) {
 	if s == nil {
-		return nil, fmt.Errorf("The given GRPC Service cannot be null")
+		return nil, fmt.Errorf("the given GRPC Service cannot be null")
 	}
 
 	return &GeneratedService{

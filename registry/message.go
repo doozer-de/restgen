@@ -31,6 +31,7 @@ func NewMessage(d *descriptor.DescriptorProto, f *File, index int) *Message {
 		File:     f,
 		Registry: f.Registry,
 		Package:  f.Package,
+		Index:    index,
 	}
 
 	fields := make(Fields, 0, len(d.GetField()))
@@ -61,7 +62,7 @@ func (m *Message) hasQueryMap() bool {
 
 func (m *Message) getQueryMap() (*pbmap.QueryMap, error) {
 	if !m.hasQueryMap() {
-		return nil, fmt.Errorf("Message does not have a querymap")
+		return nil, fmt.Errorf("message does not have a querymap")
 	}
 	opt := m.Type.GetOptions()
 	ext, err := proto.GetExtension(opt, pbmap.E_QueryMap)

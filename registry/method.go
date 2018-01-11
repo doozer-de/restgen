@@ -49,7 +49,7 @@ func (m *Method) setQueryMaps() error {
 		qm, err := msg.getQueryMap()
 
 		if err != nil {
-			return fmt.Errorf("Error getting querymap of %v: %v", msg.String(), err)
+			return fmt.Errorf("error getting querymap of %v: %v", msg.String(), err)
 		}
 
 		qs, err := NewQueryStringParams(qm.Query)
@@ -70,7 +70,7 @@ func (m *Method) setQueryMaps() error {
 				},
 			}
 
-			ownMetaData = append(ownMetaData, (*md)...)
+			ownMetaData = append(ownMetaData, *md...)
 			fmds := FieldMetadatas(ownMetaData)
 
 			qsp.Metadata = &fmds
@@ -150,7 +150,7 @@ func (m *Method) setMethodMapExtension() {
 
 	qs, err := NewQueryStringParams(mm.QueryString)
 	if err != nil {
-		log.Fatalf("Invid Query string definition: %s", err)
+		log.Fatalf("invalid Query string definition: %s", err)
 	}
 	m.RESTQueryString = *qs
 
@@ -168,7 +168,7 @@ func (m *Method) setMethodMapExtension() {
 
 		fmds, err := message.getFieldType(san)
 		if err != nil {
-			log.Fatalf("Invalid path definition. Field '%s' (sanitized: %s) not found: %s", v, san, err)
+			log.Fatalf("invalid path definition. Field '%s' (sanitized: %s) not found: %s", v, san, err)
 		}
 
 		m.RESTPathVars = append(m.RESTPathVars, PathParam{
