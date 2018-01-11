@@ -3,6 +3,8 @@ package registry
 import (
 	"fmt"
 
+	"log"
+
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
@@ -18,11 +20,11 @@ type Enum struct {
 	Index    int
 	Name     string
 
-	Values EnumValues
+	Values []*EnumValue
 }
 
 func (e *Enum) String() string {
-	return fmt.Sprintf(".%s.%s", e.Package, e.Type.GetName())
+	return fmt.Sprintf(".%s.%s", e.Package, e.Name)
 }
 
 func NewEnum(d *descriptor.EnumDescriptorProto, f *File, index int) *Enum {
@@ -32,6 +34,21 @@ func NewEnum(d *descriptor.EnumDescriptorProto, f *File, index int) *Enum {
 		Registry: f.Registry,
 		Package:  f.Package,
 		Index:    index,
+		Name:     d.GetName(),
+	}
+
+	valuesMap := map[int]*descriptor.EnumValueDescriptorProto{}
+
+	for _, v := range d.Value {
+		valuesMap[int(*v.Number)] = v
+	}
+
+	for i := 0; i < len(valuesMap); i++ {
+		if v, ok := valuesMap[i]; ok {
+			e.Values = append(e.Values, NewEnumValue(v, e, f.Registry))
+		} else {
+			log.Fatalf("error on enum %s: Values from 0..%d should be present. Value %d not found ", e.Name, len(valuesMap), i)
+		}
 	}
 
 	return e
@@ -40,6 +57,9 @@ func NewEnum(d *descriptor.EnumDescriptorProto, f *File, index int) *Enum {
 type EnumValue struct {
 	Type *descriptor.EnumValueDescriptorProto
 	Enum *Enum
+
+	Name   string
+	Number int32
 
 	Registry *Registry
 }
@@ -55,12 +75,11 @@ func (es *Enums) Add(ne *Enum) {
 	*es = append(*es, ne)
 }
 
-type EnumValues []*EnumValue
-
 func NewEnumValue(d *descriptor.EnumValueDescriptorProto, e *Enum, r *Registry) *EnumValue {
 	return &EnumValue{
-		Type:     d,
 		Enum:     e,
 		Registry: r,
+		Name:     *d.Name,
+		Number:   *d.Number,
 	}
 }

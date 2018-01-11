@@ -59,18 +59,8 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 	r.Messages.Add(m)
 }
 
-func (r *Registry) registerEnumProto(pkg string, d *descriptor.EnumDescriptorProto) {
-	e := &Enum{
-		Package:  pkg,
-		Type:     d,
-		Registry: r,
-	}
-
-	var values EnumValues
-	for _, value := range d.GetValue() {
-		values = append(values, NewEnumValue(value, e, r))
-	}
-	e.Values = values
+func (r *Registry) registerEnumProto(d *descriptor.EnumDescriptorProto, f *File, index int) {
+	e := NewEnum(d, f, index)
 
 	r.Enums.Add(e)
 }
@@ -128,7 +118,8 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 
 	// Register all Messages, Enums
 	for _, f := range files {
-		reg.Files.Add(NewFile(f, reg))
+		file := NewFile(f, reg)
+		reg.Files.Add(file)
 
 		pkg := f.GetPackage()
 
@@ -137,7 +128,7 @@ func New(r *plugin.CodeGeneratorRequest) *Registry {
 		}
 
 		for _, e := range f.GetEnumType() {
-			reg.registerEnumProto(pkg, e)
+			reg.registerEnumProto(e, file, 0) // TOOO(cs) find correct index
 		}
 
 	}
