@@ -75,10 +75,21 @@ func (es *Enums) Add(ne *Enum) {
 	*es = append(*es, ne)
 }
 
+func (es *Enums) Get(name string) (*Enum, bool) {
+	for _, e := range *es {
+		if e.Name == name {
+			return e, true
+		}
+	}
+
+	return nil, false
+}
+
 func NewEnumValue(d *descriptor.EnumValueDescriptorProto, e *Enum, r *Registry) *EnumValue {
 	return &EnumValue{
 		Enum:     e,
 		Registry: r,
+		Type:     d,
 		Name:     *d.Name,
 		Number:   *d.Number,
 	}
