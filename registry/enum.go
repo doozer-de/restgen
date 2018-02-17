@@ -2,7 +2,6 @@ package registry
 
 import (
 	"fmt"
-
 	"log"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
