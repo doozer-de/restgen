@@ -8,7 +8,6 @@ import (
 
 	"{{.GoPackage}}"
 	"github.com/doozer-de/rest"
-	"golang.org/x/net/context"
 	{{range .Imports}}
 		"{{.}}"
 	{{- end}}
@@ -62,19 +61,20 @@ func NewGeneratedService(s {{.ServiceType}}, errorHandler rest.ErrorHandler) (*G
 }
 
 {{range .GetMappedMethods}}
-func (s *GeneratedService) {{.Name}}(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (s *GeneratedService) {{.Name}}(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	req := {{.InputTypeName}}{}
 	{{if eq "*" .RESTBody -}}
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			s.errorHandler(ctx, w, r, err)
+			s.errorHandler(w, r, err)
 			return
 		}
 		defer r.Body.Close()
 
 		err = json.Unmarshal(body, &req)
 		if err != nil {
-			s.errorHandler(ctx, w, r, err)
+			s.errorHandler(w, r, err)
 			return
 		}
 	{{- end}}
@@ -102,12 +102,12 @@ func (s *GeneratedService) {{.Name}}(ctx context.Context, w http.ResponseWriter,
 	{{end}}
 	resp, err := s.Service.{{.Name}}(ctx, &req)
 	if err != nil {
-		s.errorHandler(ctx, w, r, err)
+		s.errorHandler(w, r, err)
 		return
 	}
 	b, err := json.Marshal(resp)
 	if err != nil {
-		s.errorHandler(ctx, w, r, err)
+		s.errorHandler(w, r, err)
 		return
 	}
 	w.Header().Set("Content-type", "application/json; charset=utf-8")
