@@ -29,11 +29,7 @@ type QSParameter struct {
 
 func (s *GeneratedService) GetHandlersToRegister() []rest.Register {
 	return []rest.Register{ {{range .GetMappedMethods}}
-		{
-			Method:  "{{.RESTMethod}}",
-			Path:    "{{.HarmonizedRESTPath}}",
-			Handler: http.HandlerFunc(s.{{.Name}}),
-		},
+		{ Method: "{{.RESTMethod}}", Path: "{{.HarmonizedRESTPath}}", Handler: s.{{.Name}} },
 	{{- end}}
 	}
 }
