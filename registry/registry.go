@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 

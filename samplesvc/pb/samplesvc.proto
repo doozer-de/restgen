@@ -4,7 +4,7 @@ package pb;
 
 option go_package = "github.com/doozer-de/restgen/samplesvc/pb";
 
-import "github.com/doozer-de/restgen/pbmap/map.proto";
+import "github.com/doozer-de/restgen/pbmap/pbmap.proto";
 
 service BigTestService {
 	option (pbmap.service_map) = {
