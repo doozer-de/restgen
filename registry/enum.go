@@ -76,7 +76,7 @@ func (es *Enums) Add(ne *Enum) {
 
 func (es *Enums) Get(name string) (*Enum, bool) {
 	for _, e := range *es {
-		if e.Name == name {
+		if e.Name == name || e.String() == name {
 			return e, true
 		}
 	}
