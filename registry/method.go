@@ -20,7 +20,6 @@ type Method struct {
 	RESTPathVars    PathParams
 	RESTQueryString QueryStringParams
 	RESTBody        string
-	comment         string
 	methodMapParsed bool
 	hasMethodMap    bool
 	InputType       *descriptor.DescriptorProto
