@@ -16,7 +16,7 @@ type BigTestMock struct {
 // NewBigTestMock instantiates a new BigTestMock
 func NewBigTestMock() *BigTestMock {
 	return &BigTestMock{
-		Small: make(map[uint32]*pb.Small, 0),
+		Small: make(map[uint32]*pb.Small),
 	}
 }
 
