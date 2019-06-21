@@ -1,8 +1,8 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/doozer-de/rest v2.1.0+incompatible h1:LO0vHp8/Ne9PVvdMA8mtahJR+WVRiKhbQsWCPhLcZto=
-github.com/doozer-de/rest v2.1.0+incompatible/go.mod h1:NccM3udR4Bd4Pxj3sBKKmbIrsHehnUkVa87zT23yaBQ=
+github.com/doozer-de/rest v0.0.0-20190621125149-30d92b95e800 h1:U5Nq5wXJmzKy5EtlTA7Ye6VhkQi0Bre86OVdDxWErp4=
+github.com/doozer-de/rest v0.0.0-20190621125149-30d92b95e800/go.mod h1:tGpR1hJJKxPQHYKSxsaTnXeliTbvbBSlNMgdc+dSCCA=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/mock v1.1.1/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=
