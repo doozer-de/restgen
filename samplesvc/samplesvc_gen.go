@@ -61,7 +61,7 @@ type GeneratedService struct {
 
 func NewGeneratedService(s pb.BigTestServiceServer, errorHandler rest.ErrorHandler) (*GeneratedService, error) {
 	if s == nil {
-		return nil, fmt.Errorf("The given GRPC Service cannot be null")
+		return nil, fmt.Errorf("the given GRPC Service cannot be null")
 	}
 
 	return &GeneratedService{
