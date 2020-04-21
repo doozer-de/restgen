@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/descriptor.proto";
 
 package pbmap;
+option go_package = "github.com/doozer-de/restgen/pbmap";
 
 // Correct in generated file:
 // Problem descriptor.proto an descriptor.pbmap.go are in totally differnt locations
