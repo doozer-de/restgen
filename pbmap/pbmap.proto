@@ -3,7 +3,6 @@ syntax = "proto3";
 import "google/protobuf/descriptor.proto";
 
 package pbmap;
-option go_package = "github.com/doozer-de/restgen/pbmap";
 
 option go_package = "github.com/doozer-de/restgen/pbmap";
 
