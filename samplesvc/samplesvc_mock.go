@@ -11,6 +11,7 @@ import (
 // BigTestMock represents logic reachable via a REST endpoint.
 type BigTestMock struct {
 	Small map[uint32]*pb.Small
+	pb.UnimplementedBigTestServiceServer
 }
 
 // NewBigTestMock instantiates a new BigTestMock

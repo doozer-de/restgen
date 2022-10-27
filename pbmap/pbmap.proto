@@ -6,10 +6,6 @@ package pbmap;
 
 option go_package = "github.com/doozer-de/restgen/pbmap";
 
-// Correct in generated file:
-// Problem descriptor.proto an descriptor.pbmap.go are in totally differnt locations
-//import google_protobuf "github.com/golang/protobuf/protoc-gen-go/descriptor"
-
 // MethodMap gives the parameters how to Map a GRPC Service Method to an REST Endpoint
 message MethodMap {
     // "GET", "PUT", "POST", "DELETE"

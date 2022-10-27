@@ -5,7 +5,7 @@ package samplesvc
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/doozer-de/rest"
@@ -14,10 +14,7 @@ import (
 	"github.com/doozer-de/restgen/pbmap"
 )
 
-var (
-	baseURI = "/base_uri/"
-	_       = ioutil.Discard
-)
+var baseURI = "/base_uri/"
 
 type QSParameter struct {
 	Key   string // Which key
@@ -73,7 +70,7 @@ func NewGeneratedService(s pb.BigTestServiceServer, errorHandler rest.ErrorHandl
 func (s *GeneratedService) CreateHaveAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := pb.CreateHaveAllRequest{}
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		s.errorHandler(w, r, err)
 		return
@@ -372,7 +369,7 @@ func (s *GeneratedService) GetSmall1(w http.ResponseWriter, r *http.Request) {
 func (s *GeneratedService) PutSmall(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := pb.PutSmallRequest{}
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		s.errorHandler(w, r, err)
 		return
@@ -403,7 +400,7 @@ func (s *GeneratedService) PutSmall(w http.ResponseWriter, r *http.Request) {
 func (s *GeneratedService) PostSmall(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := pb.PostSmallRequest{}
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		s.errorHandler(w, r, err)
 		return
