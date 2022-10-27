@@ -3,10 +3,10 @@
 package {{.TargetPackage}}
 
 import (
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 
 	"{{.GoPackage}}"
 	"github.com/doozer-de/rest"
@@ -15,10 +15,7 @@ import (
 	{{- end}}
 )
 
-var (
-	baseURI = "{{.BaseURI}}"
-	_ = ioutil.Discard
-)
+var baseURI = "{{.BaseURI}}"
 
 type QSParameter struct {
 	Key   string // Which key
@@ -67,7 +64,7 @@ func (s *GeneratedService) {{.Name}}(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := {{.InputTypeName}}{}
 	{{if eq "*" .RESTBody -}}
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			s.errorHandler(w, r, err)
 			return

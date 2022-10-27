@@ -1,12 +1,9 @@
 // Package protoc-gen-bff implements a plugin to generate go code for REST endpoints from protocol buffer files.
-//
-// Usage: TODO
 package main
-
-//go:generate sh -c "go-bindata *.tmpl"
 
 import (
 	"bytes"
+	_ "embed"
 	"fmt"
 	"go/format"
 	"io/ioutil"
@@ -19,6 +16,9 @@ import (
 	"github.com/golang/protobuf/proto"
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
+
+//go:embed bff.tmpl
+var bffTmpl string
 
 func main() {
 	input, err := ioutil.ReadAll(os.Stdin)
@@ -70,7 +70,7 @@ func generate(r *plugin.CodeGeneratorRequest) ([]*plugin.CodeGeneratorResponse_F
 
 	name := fmt.Sprintf("%v_gen.go", reg.Service.TargetPackage)
 	f.Name = &name
-	t := template.Must(template.New("handlers").Funcs(funcMap).Parse(string(MustAsset("bff.tmpl"))))
+	t := template.Must(template.New("handlers").Funcs(funcMap).Parse(bffTmpl))
 	s := reg.Service
 
 	err := t.Execute(out, s)
