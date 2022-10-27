@@ -1,5 +1,5 @@
 // Package emitters generates go-specific code.
-package emitters
+package main
 
 import (
 	"github.com/doozer-de/restgen/registry"

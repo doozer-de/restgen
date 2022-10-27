@@ -11,7 +11,6 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/doozer-de/restgen/protoc-gen-bff/emitters"
 	"github.com/doozer-de/restgen/registry"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -65,7 +64,7 @@ func generate(r *pluginpb.CodeGeneratorRequest) ([]*pluginpb.CodeGeneratorRespon
 	out := &bytes.Buffer{}
 
 	funcMap := template.FuncMap{
-		"GetConverterName": emitters.GetConverterName,
+		"GetConverterName": GetConverterName,
 	}
 
 	name := fmt.Sprintf("%v_gen.go", reg.Service.TargetPackage)

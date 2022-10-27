@@ -1,5 +1,7 @@
 package registry
 
+import "golang.org/x/exp/slices"
+
 // CamelCase converts a snake_cased (_) identifier to an CamelCased identifier (hello_world -> HelloWorld)
 // From the golang/protobuf
 func CamelCase(s string) string {
@@ -44,7 +46,7 @@ var ReservedNames = []string{"Reset", "String", "ProtoMessage", "Descriptor"}
 // Sanitize will apply CamelCase and rename Fields from the ReservedNames list following the scheme: Reset -> Reset_ and so on
 func Sanitize(s string) string {
 	s = CamelCase(s)
-	if isIn(s, ReservedNames...) {
+	if slices.Contains(ReservedNames, s) {
 		return s + "_"
 	}
 
