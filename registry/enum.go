@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 type Enum struct {
-	Type *descriptor.EnumDescriptorProto
+	Type *descriptorpb.EnumDescriptorProto
 
 	File     *File
 	Registry *Registry
@@ -26,7 +26,7 @@ func (e *Enum) String() string {
 	return fmt.Sprintf(".%s.%s", e.Package, e.Name)
 }
 
-func NewEnum(d *descriptor.EnumDescriptorProto, f *File, index int) *Enum {
+func NewEnum(d *descriptorpb.EnumDescriptorProto, f *File, index int) *Enum {
 	e := &Enum{
 		Type:     d,
 		File:     f,
@@ -36,7 +36,7 @@ func NewEnum(d *descriptor.EnumDescriptorProto, f *File, index int) *Enum {
 		Name:     d.GetName(),
 	}
 
-	valuesMap := map[int]*descriptor.EnumValueDescriptorProto{}
+	valuesMap := map[int]*descriptorpb.EnumValueDescriptorProto{}
 
 	for _, v := range d.Value {
 		valuesMap[int(*v.Number)] = v
@@ -54,7 +54,7 @@ func NewEnum(d *descriptor.EnumDescriptorProto, f *File, index int) *Enum {
 }
 
 type EnumValue struct {
-	Type *descriptor.EnumValueDescriptorProto
+	Type *descriptorpb.EnumValueDescriptorProto
 	Enum *Enum
 
 	Name   string
@@ -84,7 +84,7 @@ func (es *Enums) Get(name string) (*Enum, bool) {
 	return nil, false
 }
 
-func NewEnumValue(d *descriptor.EnumValueDescriptorProto, e *Enum, r *Registry) *EnumValue {
+func NewEnumValue(d *descriptorpb.EnumValueDescriptorProto, e *Enum, r *Registry) *EnumValue {
 	return &EnumValue{
 		Enum:     e,
 		Registry: r,

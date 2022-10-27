@@ -3,8 +3,8 @@ package registry
 import (
 	"log"
 
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
+	"google.golang.org/protobuf/types/descriptorpb"
+	"google.golang.org/protobuf/types/pluginpb"
 )
 
 const restmapimport = "github.com/doozer-de/restgen/pbmap"
@@ -40,7 +40,7 @@ type Registry struct {
 	Package  string
 }
 
-func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProto) {
+func (r *Registry) registerMessageProto(pkg string, d *descriptorpb.DescriptorProto) {
 	var fields Fields
 
 	m := &Message{
@@ -58,7 +58,7 @@ func (r *Registry) registerMessageProto(pkg string, d *descriptor.DescriptorProt
 	r.Messages.Add(m)
 }
 
-func (r *Registry) registerEnumProto(d *descriptor.EnumDescriptorProto, f *File, index int) {
+func (r *Registry) registerEnumProto(d *descriptorpb.EnumDescriptorProto, f *File, index int) {
 	e := NewEnum(d, f, index)
 
 	r.Enums.Add(e)
@@ -107,7 +107,7 @@ func (r *Registry) registerServiceProto(file *File) {
 }
 
 // New createsa  new Registry that will read all the information neede from the given CodeGeneratorRequest
-func New(r *plugin.CodeGeneratorRequest) *Registry {
+func New(r *pluginpb.CodeGeneratorRequest) *Registry {
 	reg := &Registry{
 		Files:    []*File{},
 		Messages: []*Message{},

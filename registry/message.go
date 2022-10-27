@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/doozer-de/restgen/pbmap"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 // Message wraps a protobuf message with a little extra information for code generation
 type Message struct {
-	Type *descriptor.DescriptorProto
+	Type *descriptorpb.DescriptorProto
 
 	File     *File
 	Registry *Registry
@@ -24,7 +24,7 @@ type Message struct {
 	Fields   Fields
 }
 
-func NewMessage(d *descriptor.DescriptorProto, f *File, index int) *Message {
+func NewMessage(d *descriptorpb.DescriptorProto, f *File, index int) *Message {
 	m := &Message{
 		Type:     d,
 		File:     f,
@@ -64,11 +64,7 @@ func (m *Message) getQueryMap() (*pbmap.QueryMap, error) {
 		return nil, fmt.Errorf("message does not have a querymap")
 	}
 	opt := m.Type.GetOptions()
-	ext, err := proto.GetExtension(opt, pbmap.E_QueryMap)
-
-	if err != nil {
-		return nil, fmt.Errorf("error getting QueryMap extension")
-	}
+	ext := proto.GetExtension(opt, pbmap.E_QueryMap)
 
 	qm, ok := ext.(*pbmap.QueryMap)
 	// Should never happen
@@ -85,7 +81,7 @@ func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 	for _, definedField := range m.Type.Field {
 		if strings.Compare(*definedField.Name, pathfields[0]) == 0 {
 			if len(pathfields) == 1 {
-				if *definedField.Type != descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+				if *definedField.Type != descriptorpb.FieldDescriptorProto_TYPE_MESSAGE {
 					res := []FieldMetadata{
 						{
 							// TypeName not needed, because we progress further and just have to collect information we need for the initialization
@@ -97,7 +93,7 @@ func (m *Message) getFieldType(path string) (*FieldMetadatas, error) {
 
 					return &f, nil
 				}
-			} else if *definedField.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+			} else if *definedField.Type == descriptorpb.FieldDescriptorProto_TYPE_MESSAGE {
 				if definedField.TypeName == nil {
 					panic(*definedField)
 				}

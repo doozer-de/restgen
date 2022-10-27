@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/doozer-de/restgen/pbmap"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 type Methods []*Method
@@ -32,7 +32,7 @@ func (ms *Methods) Get(key string) (*Method, bool) {
 
 // Service wraps a ServiceDescriptorProto with additions for code Generation
 type Service struct {
-	Type     *descriptor.ServiceDescriptorProto
+	Type     *descriptorpb.ServiceDescriptorProto
 	Registry *Registry
 	File     *File
 
@@ -48,7 +48,7 @@ type Service struct {
 	Version       string
 }
 
-func (s *Service) RegisterMethod(method *descriptor.MethodDescriptorProto) {
+func (s *Service) RegisterMethod(method *descriptorpb.MethodDescriptorProto) {
 	m := &Method{
 		Type:     method,
 		Name:     *method.Name,
@@ -116,10 +116,7 @@ func (s *Service) getServiceMapExtension() (*pbmap.ServiceMap, error) {
 	if !proto.HasExtension(opt, pbmap.E_ServiceMap) {
 		return nil, fmt.Errorf("ServiceMap Extension not present")
 	}
-	ext, err := proto.GetExtension(opt, pbmap.E_ServiceMap)
-	if err != nil {
-		return nil, fmt.Errorf("error getting ServiceMap extension")
-	}
+	ext := proto.GetExtension(opt, pbmap.E_ServiceMap)
 	sm, ok := ext.(*pbmap.ServiceMap)
 	if !ok {
 		return nil, fmt.Errorf("error getting ServiceMap extension, wrong type")

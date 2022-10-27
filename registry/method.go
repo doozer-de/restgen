@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/doozer-de/restgen/pbmap"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 // Method is wrapper around the MethodDescriptorProto with some additional/extracted information useful to generate the Gateway
 type Method struct {
-	Type            *descriptor.MethodDescriptorProto
+	Type            *descriptorpb.MethodDescriptorProto
 	Package         string
 	Name            string
 	RESTMethod      string
@@ -22,8 +22,8 @@ type Method struct {
 	RESTBody        string
 	methodMapParsed bool
 	hasMethodMap    bool
-	InputType       *descriptor.DescriptorProto
-	OutputType      *descriptor.DescriptorProto
+	InputType       *descriptorpb.DescriptorProto
+	OutputType      *descriptorpb.DescriptorProto
 	Registry        *Registry
 }
 
@@ -35,7 +35,7 @@ func (m *Method) setQueryMaps() error {
 
 	var foundQueryMap bool
 	for _, fieldProto := range m.InputType.GetField() {
-		if fieldProto.GetType() != descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+		if fieldProto.GetType() != descriptorpb.FieldDescriptorProto_TYPE_MESSAGE {
 			// Only Messages can potentially have QueryMaps
 			continue
 		}
@@ -133,15 +133,13 @@ func (m *Method) setMethodMapExtension() {
 	if !proto.HasExtension(opt, pbmap.E_MethodMap) {
 		return
 	}
-	ext, err := proto.GetExtension(opt, pbmap.E_MethodMap)
-	if err != nil {
-		return
-	}
-	mm, ok := ext.(*pbmap.MethodMap)
+	ext := proto.GetExtension(opt, pbmap.E_MethodMap)
 
+	mm, ok := ext.(*pbmap.MethodMap)
 	if !ok {
 		return
 	}
+
 	m.hasMethodMap = true
 	m.RESTMethod = mm.Method
 	m.RESTBody = mm.Body

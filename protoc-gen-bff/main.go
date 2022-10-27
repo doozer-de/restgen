@@ -13,8 +13,8 @@ import (
 
 	"github.com/doozer-de/restgen/protoc-gen-bff/emitters"
 	"github.com/doozer-de/restgen/registry"
-	"github.com/golang/protobuf/proto"
-	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/pluginpb"
 )
 
 //go:embed bff.tmpl
@@ -27,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	req := new(plugin.CodeGeneratorRequest)
+	req := new(pluginpb.CodeGeneratorRequest)
 
 	if err = proto.Unmarshal(input, req); err != nil {
 		panic(err)
@@ -37,26 +37,26 @@ func main() {
 
 	if err != nil {
 		s := err.Error()
-		emit(&plugin.CodeGeneratorResponse{Error: &s})
+		emit(&pluginpb.CodeGeneratorResponse{Error: &s})
 		return
 	}
 
-	emit(&plugin.CodeGeneratorResponse{File: out})
+	emit(&pluginpb.CodeGeneratorResponse{File: out})
 }
 
-func ignore() []*plugin.CodeGeneratorResponse_File {
+func ignore() []*pluginpb.CodeGeneratorResponse_File {
 	s := "// +build ignore \n\n// Nothing to see here, just a dummy"
 	name := "noservice_gen.go"
-	f := &plugin.CodeGeneratorResponse_File{}
+	f := &pluginpb.CodeGeneratorResponse_File{}
 	f.Content = &s
 	f.Name = &name
-	return []*plugin.CodeGeneratorResponse_File{f}
+	return []*pluginpb.CodeGeneratorResponse_File{f}
 }
 
-func generate(r *plugin.CodeGeneratorRequest) ([]*plugin.CodeGeneratorResponse_File, error) {
+func generate(r *pluginpb.CodeGeneratorRequest) ([]*pluginpb.CodeGeneratorResponse_File, error) {
 	reg := registry.New(r)
 
-	f := plugin.CodeGeneratorResponse_File{}
+	f := pluginpb.CodeGeneratorResponse_File{}
 
 	if reg.Service == nil || !reg.Service.HasServiceMapExtension() {
 		return ignore(), nil
@@ -88,10 +88,10 @@ func generate(r *plugin.CodeGeneratorRequest) ([]*plugin.CodeGeneratorResponse_F
 
 	outString := string(outformatted)
 	f.Content = &outString
-	return []*plugin.CodeGeneratorResponse_File{&f}, nil
+	return []*pluginpb.CodeGeneratorResponse_File{&f}, nil
 }
 
-func emit(r *plugin.CodeGeneratorResponse) {
+func emit(r *pluginpb.CodeGeneratorResponse) {
 	buf, err := proto.Marshal(r)
 
 	if err != nil {

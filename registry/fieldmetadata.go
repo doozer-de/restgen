@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 // FieldMetadatas are not part of the Registry. They represent a path to a field in the object tree.
@@ -14,7 +14,7 @@ type FieldMetadatas []FieldMetadata
 // FieldMetadata holds Information needed to generate the code to copy a defined QueryString parameters to a actually field
 type FieldMetadata struct {
 	Type      string
-	ProtoKind descriptor.FieldDescriptorProto_Type
+	ProtoKind descriptorpb.FieldDescriptorProto_Type
 	Name      string
 }
 
