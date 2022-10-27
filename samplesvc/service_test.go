@@ -2,7 +2,10 @@ package samplesvc_test
 
 import (
 	"bytes"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -12,10 +15,6 @@ import (
 	"github.com/doozer-de/rest"
 	"github.com/doozer-de/restgen/samplesvc"
 	"github.com/doozer-de/restgen/samplesvc/pb"
-
-	"encoding/base64"
-	"encoding/json"
-	"io/ioutil"
 )
 
 func init() {
@@ -121,7 +120,7 @@ func TestCreateHaveAll(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	bActual, err := ioutil.ReadAll(resp.Body)
+	bActual, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}
@@ -177,7 +176,7 @@ func TestGetHaveAll(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}
@@ -274,7 +273,7 @@ func TestGetDeepPath(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}
@@ -381,7 +380,7 @@ func TestGetSmall(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}
@@ -441,7 +440,7 @@ func TestGetLongPath(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}
@@ -478,7 +477,7 @@ func TestGetDeepPathPath(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}
@@ -511,7 +510,7 @@ func TestPageSortFilter(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("Cannot read the responsed body. Error: %v", err)
 	}

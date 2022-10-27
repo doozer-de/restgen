@@ -6,7 +6,7 @@ import (
 	_ "embed"
 	"fmt"
 	"go/format"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"text/template"
@@ -21,7 +21,7 @@ import (
 var bffTmpl string
 
 func main() {
-	input, err := ioutil.ReadAll(os.Stdin)
+	input, err := io.ReadAll(os.Stdin)
 
 	if err != nil {
 		panic(err)

@@ -1,11 +1,10 @@
 package samplesvc
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/doozer-de/restgen/samplesvc/pb"
-
-	"golang.org/x/net/context"
 )
 
 // BigTestMock represents logic reachable via a REST endpoint.
