@@ -1,5 +1,9 @@
 github.com/doozer-de/rest v1.0.0 h1:K2dW/lAGvezpCjbEeUKqEwstzZ4EAbLJl0ne0G20oFc=
 github.com/doozer-de/rest v1.0.0/go.mod h1:tGpR1hJJKxPQHYKSxsaTnXeliTbvbBSlNMgdc+dSCCA=
+github.com/doozer-de/rest v1.0.1-0.20221027123949-fe8c57e39de3 h1:AbgoP2nfrvrrn2qG+1vxPnrAq8G1jkBD22qQQ8Qu+rU=
+github.com/doozer-de/rest v1.0.1-0.20221027123949-fe8c57e39de3/go.mod h1:FeWdMLnuj6b2OXeFMAg4oJn/7gfaFEMXGx6ZRQB6vSg=
+github.com/doozer-de/rest v1.0.1 h1:86BJKq7S23Uw1MV1sLnWJKnl/TRAl3L5i1g3H8e5NG0=
+github.com/doozer-de/rest v1.0.1/go.mod h1:FeWdMLnuj6b2OXeFMAg4oJn/7gfaFEMXGx6ZRQB6vSg=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
 github.com/golang/protobuf v1.5.2 h1:ROPKBNFfQgOUMifHyP+KYbvpjbdoFNs+aK7DXlji0Tw=
 github.com/golang/protobuf v1.5.2/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiuN0vRsmY=

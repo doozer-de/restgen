@@ -3,7 +3,7 @@ module github.com/doozer-de/restgen
 go 1.19
 
 require (
-	github.com/doozer-de/rest v1.0.0
+	github.com/doozer-de/rest v1.0.1
 	golang.org/x/exp v0.0.0-20221026153819-32f3d567a233
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
